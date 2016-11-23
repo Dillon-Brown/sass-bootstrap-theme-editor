@@ -23,8 +23,9 @@
 <div class="container main-container">
     <div></div>
     <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <h1>Proof of Concept</h1>
+        <p class="lead">Use the controls to change the properties of the nav bar.</p>
+        <p>This takes variables and css written in Sass and compiles them in the browser.</p>
     </div>
 
     <form action="" style="width: 400px;">
@@ -89,6 +90,27 @@
     .source-container textarea {
         min-height: 100px;
     }
+
+    .navbar-inverse {
+        background-color: #534D64;
+        border-bottom-color: #534D64;
+        min-height: 62px; }
+
+    .navbar-nav > li > a {
+        padding-top: 31px;
+        padding-bottom: 31px; }
+
+    .navbar-brand {
+        padding-top: 31px;
+        padding-bottom: 31px; }
+
+    .main-container {
+        margin-top: 92px; }
+
+    .navbar-inverse .navbar-nav > .active > a,
+    .navbar-inverse .navbar-nav > .active > a:focus,
+    .navbar-inverse .navbar-nav > .active > a:hover {
+        background-color: #4b3b76; }
 </style>
 <style id="scss_result"></style>
 
