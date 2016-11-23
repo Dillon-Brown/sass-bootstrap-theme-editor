@@ -44,11 +44,12 @@
 <script>
     var sass = new Sass();
     var color_scss = '$navbar-bg-color: #534D64; ';
-    var val_scss = '$navbar-height: 20px; ';
-    var style_scss = '.navbar-inverse { background-color: $navbar-bg-color; min-height: $navbar-height; }' +
+    var val_scss = '$navbar-height: 30px; ';
+    var style_scss = '.navbar-inverse { background-color: $navbar-bg-color; border-bottom-color: $navbar-bg-color;  min-height: $navbar-height; }' +
         '.navbar-nav>li>a { padding-top: ($navbar-height / 2); padding-bottom: ($navbar-height / 2);  } ' +
         '.navbar-brand { padding-top: ($navbar-height / 2); padding-bottom: ($navbar-height / 2); } ' +
-        '.main-container { margin-top: $navbar-height + 30px; } ';
+        '.main-container { margin-top: $navbar-height + 30px; } ' +
+        '.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {   background-color: saturate( $navbar-bg-color, 20% ); }';
 
     function ColorCallback(color) {
         color_scss = '$navbar-bg-color: ' + color + ';';
@@ -71,8 +72,8 @@
 
 
         $( "#slider" ).slider({
-            value: 20,
-            min: 20,
+            value: 30,
+            min: 30,
             max: 200,
             step: 8,
             slide: function( event, ui ) {
