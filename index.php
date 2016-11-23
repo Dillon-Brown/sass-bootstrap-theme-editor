@@ -144,7 +144,7 @@
         $( "#slider" ).slider({
             value: 30,
             min: 30,
-            max: 200,
+            max: 120,
             step: 8,
             slide: function( event, ui ) {
                 $.each(variables, function(i, v) {
