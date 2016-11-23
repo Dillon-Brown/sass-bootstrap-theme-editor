@@ -28,20 +28,21 @@
         <p>This takes variables and css written in Sass and compiles them in the browser.</p>
     </div>
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-4">
             <form action="" style="width: 400px;">
                 <div class="col-xs-12">
                     <div id="picker"></div>
                 </div>
-                <div class="col-xs-12">
-                    <div class="form-item">
-                        <label for="color">Navbar Color:</label>
-                        <div><input type="text" id="color" name="color" value="#534D64" /></div>
-                    </div>
-                </div>
             </form>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-4">
+            <div class="form-item">
+                <div>
+                    <label for="color">Navbar Color:</label>
+                    <input type="text" id="color" name="color" value="#534D64" />
+                </div>
+                <div class="color-preview"></div>
+            </div>
             <label for="slider">Navbar Height:</label>
             <div id="slider"></div>
         </div>
@@ -98,6 +99,12 @@
     </div>
 </div>
 <style>
+
+    .color-preview {
+        height: 64px;
+        width: 64px;
+        display: inline-block;
+    }
     .source-container textarea {
         min-height: 200px;
     }
@@ -143,6 +150,7 @@
 
     function ColorCallback(color) {
         $('#color').val(color);
+        $('.color-preview').css('background-color', color);
         $.each(variables, function(i, v) {
             if(v.name == 'navbar-bg-color') {
                 variables[i].value = color;
