@@ -32,8 +32,49 @@
     </form>
     <label for="slider">Navbar Height:</label>
     <div id="slider"></div>
-</div>
+    <div class="row">
+        <div class="col-xs-4">
+            <label>Variables</label>
+            <textarea id="variables" class="form-control"></textarea>
+        </div>
+        <div class="col-xs-4">
+            <label>Sass</label>
+            <textarea id="sass" class="form-control">
+.navbar-inverse {
+    background-color: $navbar-bg-color;
+    border-bottom-color: $navbar-bg-color;
+    min-height: $navbar-height;
+}
+.navbar-nav>li>a {
+    padding-top: ($navbar-height / 2);
+    padding-bottom: ($navbar-height / 2);
+}
+.navbar-brand {
+    padding-top: ($navbar-height / 2);
+    padding-bottom: ($navbar-height / 2);
+}
+.main-container {
+    margin-top: $navbar-height + 30px;
+}
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:focus,
+.navbar-inverse .navbar-nav>.active>a:hover {
+    background-color: saturate( $navbar-bg-color, 20%);
+}
+            </textarea>
+        </div>
+        <div class="col-xs-4">
+            <label>CSS</label>
+            <textarea id="css" class="form-control"></textarea>
+        </div>
+    </div>
 
+</div>
+<style>
+    textarea {
+        min-height: 200px;
+    }
+</style>
 <style id="scss_result"></style>
 
 <script src="js/jquery-3.1.1.min.js"></script>
@@ -45,11 +86,7 @@
     var sass = new Sass();
     var color_scss = '$navbar-bg-color: #534D64; ';
     var val_scss = '$navbar-height: 30px; ';
-    var style_scss = '.navbar-inverse { background-color: $navbar-bg-color; border-bottom-color: $navbar-bg-color;  min-height: $navbar-height; }' +
-        '.navbar-nav>li>a { padding-top: ($navbar-height / 2); padding-bottom: ($navbar-height / 2);  } ' +
-        '.navbar-brand { padding-top: ($navbar-height / 2); padding-bottom: ($navbar-height / 2); } ' +
-        '.main-container { margin-top: $navbar-height + 30px; } ' +
-        '.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {   background-color: saturate( $navbar-bg-color, 20% ); }';
+    var style_scss = $('#sass').val();
 
     function ColorCallback(color) {
         color_scss = '$navbar-bg-color: ' + color + ';';
@@ -61,6 +98,9 @@
     }
 
     function UpdateDisplay() {
+        $('#variables').val(color_scss+'\n'+val_scss);
+        $('#sass').val(style_scss);
+        $('#css').text($('#scss_result').text());
 
     }
 
@@ -92,7 +132,7 @@
     sass.compile(val_scss + color_scss + style_scss, function(result) {
         console.log(result)
         $('#scss_result').html(result.text);
-        UpdateDisplay();
+        UpdateDisplay(result.text);
     });
 
 
