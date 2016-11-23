@@ -27,12 +27,27 @@
         <p class="lead">Use the controls to change the properties of the nav bar.</p>
         <p>This takes variables and css written in Sass and compiles them in the browser.</p>
     </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <form action="" style="width: 400px;">
+                <div class="col-xs-12">
+                    <div id="picker"></div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-item">
+                        <label for="color">Navbar Color:</label>
+                        <div><input type="text" id="color" name="color" value="#534D64" /></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-6">
+            <label for="slider">Navbar Height:</label>
+            <div id="slider"></div>
+        </div>
+    </div>
 
-    <form action="" style="width: 400px;">
-        <div class="form-item"><label for="color">Navbar Color:</label><input type="text" id="color" name="color" value="#534D64" /></div><div id="picker"></div>
-    </form>
-    <label for="slider">Navbar Height:</label>
-    <div id="slider"></div>
+
 </div>
 <div class="container console-container">
     <p>&nbsp;</p>
