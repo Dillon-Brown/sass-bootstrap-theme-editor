@@ -28,20 +28,21 @@
         <p>This takes variables and css written in Sass and compiles them in the browser.</p>
     </div>
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-xs-6">
             <form action="" style="width: 400px;">
                 <div class="col-xs-12">
                     <div id="picker"></div>
+                    <div class="color-preview"></div>
                 </div>
             </form>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-6">
             <div class="form-item">
                 <div>
                     <label for="color">Navbar Color:</label>
                     <input type="text" id="color" name="color" value="#534D64" />
                 </div>
-                <div class="color-preview"></div>
+
             </div>
             <label for="slider">Navbar Height:</label>
             <div id="slider"></div>
@@ -103,6 +104,10 @@
     .color-preview {
         height: 64px;
         width: 64px;
+        display: inline-block;
+    }
+
+    #picker {
         display: inline-block;
     }
     .source-container textarea {
