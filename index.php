@@ -50,24 +50,15 @@
 
 
 </div>
-<div class="container console-container">
-    <p>&nbsp;</p>
-    <div class="row">
-        <div class="col-xs-12">
-            <label>Console</label>
-            <textarea id="console" class="form-control"></textarea>
-        </div>
-    </div>
-</div>
 <div class="container source-container">
     <p>&nbsp;</p>
     <div class="row">
         <div class="col-xs-4">
-            <label>Variables</label>
+            <label>Variables (Sass)</label>
             <textarea id="variables" class="form-control"></textarea>
         </div>
         <div class="col-xs-4">
-            <label>Sass</label>
+            <label>Style (Sass)</label>
             <textarea id="sass" class="form-control">
 .navbar-inverse {
     background-color: $navbar-bg-color;
@@ -93,8 +84,17 @@
             </textarea>
         </div>
         <div class="col-xs-4">
-            <label>CSS</label>
+            <label>Output (CSS)</label>
             <textarea id="css" class="form-control"></textarea>
+        </div>
+    </div>
+</div>
+<div class="container console-container">
+    <p>&nbsp;</p>
+    <div class="row">
+        <div class="col-xs-12">
+            <label>Console</label>
+            <textarea id="console" class="form-control"></textarea>
         </div>
     </div>
 </div>
