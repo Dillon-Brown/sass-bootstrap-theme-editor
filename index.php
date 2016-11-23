@@ -101,7 +101,7 @@
     var sass = new Sass();
     var variables = [
         {name: "navbar-bg-color", value: "#534D64" },
-        {name: "navbar-height", value: "30px" }
+        {name: "navbar-height", value: "72px" }
     ];
 
     function ColorCallback(color) {
@@ -142,7 +142,7 @@
         $.farbtastic('#picker').setColor($('#color').val());
 
         $( "#slider" ).slider({
-            value: 30,
+            value: 90,
             min: 30,
             max: 120,
             step: 8,
