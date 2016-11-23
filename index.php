@@ -32,6 +32,9 @@
     </form>
     <label for="slider">Navbar Height:</label>
     <div id="slider"></div>
+</div>
+<div class="container">
+    <p>&nbsp;</p>
     <div class="row">
         <div class="col-xs-4">
             <label>Variables</label>
@@ -68,7 +71,6 @@
             <textarea id="css" class="form-control"></textarea>
         </div>
     </div>
-
 </div>
 <style>
     textarea {
@@ -91,25 +93,23 @@
     function ColorCallback(color) {
         color_scss = '$navbar-bg-color: ' + color + ';';
         $('#color').val(color);
-            sass.compile(val_scss + color_scss + style_scss, function(result) {
-                $('#scss_result').html(result.text);
-                UpdateDisplay();
-            });
+        Compile();
     }
 
-    function UpdateDisplay() {
-        $('#variables').val(color_scss+'\n'+val_scss);
-        $('#sass').val(style_scss);
-        $('#css').text($('#scss_result').text());
-
+    function Compile() {
+        sass.compile(val_scss + color_scss + style_scss, function(result) {
+                    console.log(result)
+            $('#scss_result').html(result.text);
+            $('#variables').val(color_scss+'\n'+val_scss);
+            $('#sass').val(style_scss);
+            $('#css').text($('#scss_result').text());
+        });
     }
 
 
         $('#color').farbtastic('#picker');
         $.farbtastic('#picker').linkTo(ColorCallback);
         $.farbtastic('#picker').setColor($('#color').val());
-        $('#color').change(ColorCallback);
-
 
         $( "#slider" ).slider({
             value: 30,
@@ -117,23 +117,14 @@
             max: 200,
             step: 8,
             slide: function( event, ui ) {
-                console.log( ui.value);
-                val_scss = '$navbar-height:'+ ui.value +'px; ';
-                sass.compile(val_scss + color_scss + style_scss, function(result) {
-//                    console.log(result)
-                    $('#scss_result').html(result.text);
-                    UpdateDisplay();
-                });
+                val_scss = '$navbar-height: '+ ui.value +'px; ';
+                Compile();
             }
         });
 
 
     // first compile
-    sass.compile(val_scss + color_scss + style_scss, function(result) {
-        console.log(result)
-        $('#scss_result').html(result.text);
-        UpdateDisplay(result.text);
-    });
+   Compile();
 
 
 
