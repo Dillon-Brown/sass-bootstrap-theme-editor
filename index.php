@@ -183,6 +183,7 @@
 
 
         $('#color').farbtastic('#picker');
+        $('#color').keyup(function(){$.farbtastic('#picker').setColor($('#color').val());});
         $.farbtastic('#picker').linkTo(ColorCallback);
         $.farbtastic('#picker').setColor($('#color').val());
 
