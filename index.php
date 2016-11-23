@@ -33,7 +33,16 @@
     <label for="slider">Navbar Height:</label>
     <div id="slider"></div>
 </div>
-<div class="container">
+<div class="container console-container">
+    <p>&nbsp;</p>
+    <div class="row">
+        <div class="col-xs-12">
+            <label>Console</label>
+            <textarea id="console" class="form-control"></textarea>
+        </div>
+    </div>
+</div>
+<div class="container source-container">
     <p>&nbsp;</p>
     <div class="row">
         <div class="col-xs-4">
@@ -73,8 +82,12 @@
     </div>
 </div>
 <style>
-    textarea {
+    .source-container textarea {
         min-height: 200px;
+    }
+
+    .source-container textarea {
+        min-height: 100px;
     }
 </style>
 <style id="scss_result"></style>
@@ -86,23 +99,40 @@
 <script src="dist/sass.js"></script>
 <script>
     var sass = new Sass();
-    var color_scss = '$navbar-bg-color: #534D64; ';
-    var val_scss = '$navbar-height: 30px; ';
-    var style_scss = $('#sass').val();
+    var variables = [
+        {name: "navbar-bg-color", value: "#534D64" },
+        {name: "navbar-height", value: "30px" }
+    ];
 
     function ColorCallback(color) {
-        color_scss = '$navbar-bg-color: ' + color + ';';
         $('#color').val(color);
+        $.each(variables, function(i, v) {
+            if(v.name == 'navbar-bg-color') {
+                variables[i].value = color;
+            }
+        });
         Compile();
     }
 
+    function BuildVariables() {
+        var variables_txt = '';
+        $.each(variables, function(i, v) {
+            var variable = '$' + v.name +': '+ v.value + ';';
+            variables_txt = variables_txt + variable + '\n';
+        });
+        $('#variables').val(variables_txt);
+    }
+
     function Compile() {
-        sass.compile(val_scss + color_scss + style_scss, function(result) {
-                    console.log(result)
-            $('#scss_result').html(result.text);
-            $('#variables').val(color_scss+'\n'+val_scss);
-            $('#sass').val(style_scss);
-            $('#css').text($('#scss_result').text());
+        BuildVariables();
+
+        sass.compile($('#variables').val() + $('#sass').val(), function(result) {
+            if(result.status != 0) {
+                $('console').val(result.formatted);
+            }
+            $('#scss_result').html(result.text)
+
+            $('#css').text(result.text);
         });
     }
 
@@ -117,7 +147,11 @@
             max: 200,
             step: 8,
             slide: function( event, ui ) {
-                val_scss = '$navbar-height: '+ ui.value +'px; ';
+                $.each(variables, function(i, v) {
+                    if(v.name == 'navbar-height') {
+                        variables[i].value = ui.value +'px'
+                    }
+                });
                 Compile();
             }
         });
