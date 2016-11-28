@@ -146,6 +146,7 @@
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/farbtastic.js"></script>
 <script src="dist/sass.js"></script>
+<script src="js/sugar/themes/builder.js"></script>
 <script>
     var sass = new Sass();
     var variables = [
