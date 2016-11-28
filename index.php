@@ -75,7 +75,7 @@
     padding-bottom: ($navbar-height / 2);
 }
 .main-container {
-    margin-top: $navbar-height + 30px;
+    margin-top: $navbar-height + 24px;
 }
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav>.active>a:focus,
@@ -132,7 +132,7 @@
         padding-bottom: 31px; }
 
     .main-container {
-        margin-top: 92px; }
+        margin-top: 96px; }
 
     .navbar-inverse .navbar-nav > .active > a,
     .navbar-inverse .navbar-nav > .active > a:focus,
