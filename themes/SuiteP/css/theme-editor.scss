@@ -11,6 +11,7 @@
   height: 512px;
   padding: 8px;
   width: 256px;
+  text-align: center;
 
   label {
     display: block;
@@ -37,6 +38,7 @@
   }
 
   .editor_color_preview {
+    border-radius: 4px;
     display: inline-block;
     float: right;
     height: $input-line-height;
@@ -61,5 +63,17 @@
 
   .editor_size_reset_reset {
     margin-top: 10px;
+  }
+
+  .editor_loader {
+    background-color: $main-alternate-bg;
+    background-image: url('../images/loading.gif');
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    display: inline-block;
+    height: 64px;
+    margin: 0;
+    padding: 0;
+    width: 64px;
   }
 }

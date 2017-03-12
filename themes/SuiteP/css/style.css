@@ -18581,7 +18581,8 @@ iframe.teamNoticeBox {
   border-color: transparent;
   height: 512px;
   padding: 8px;
-  width: 256px; }
+  width: 256px;
+  text-align: center; }
   .sass-theme-editor label {
     display: block;
     text-align: left; }
@@ -18597,6 +18598,7 @@ iframe.teamNoticeBox {
     display: inline-block;
     width: 85%; }
   .sass-theme-editor .editor_color_preview {
+    border-radius: 4px;
     display: inline-block;
     float: right;
     height: 40px;
@@ -18613,5 +18615,15 @@ iframe.teamNoticeBox {
     width: 100%; }
   .sass-theme-editor .editor_size_reset_reset {
     margin-top: 10px; }
+  .sass-theme-editor .editor_loader {
+    background-color: #FFFFFF;
+    background-image: url("../images/loading.gif");
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    display: inline-block;
+    height: 64px;
+    margin: 0;
+    padding: 0;
+    width: 64px; }
 
 /*# sourceMappingURL=style.css.map */

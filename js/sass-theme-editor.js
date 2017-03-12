@@ -8,7 +8,9 @@ var SassThemeEditor = function () {
   _sassThemeEditor.sassStylesheetFiles = [];
   _sassThemeEditor.sassSelectedVariable = 0;
   _sassThemeEditor.controls = {};
-  _sassThemeEditor.sassCompiler = new Sass();
+  _sassThemeEditor.uiTimeout = null;
+  _sassThemeEditor.uiUpdateTimeout = 300;
+  _sassThemeEditor.isCompiling = false;
 
   _sassThemeEditor.construct = function (options) {
     _sassThemeEditor.id = _sassThemeEditor.generateUUID();
@@ -103,6 +105,17 @@ var SassThemeEditor = function () {
     _sassThemeEditor.controls.editor_apply_style.attr('id', 'editor_apply_style_'+_sassThemeEditor.id);
     _sassThemeEditor.controls.editor_apply_style.appendTo(_sassThemeEditor.controls.editor_container);
 
+    _sassThemeEditor.controls.editor_loader_container = $('<div></div>');
+    _sassThemeEditor.controls.editor_loader_container.attr('id', 'editor_loader_container_' + _sassThemeEditor.id);
+    _sassThemeEditor.controls.editor_loader_container.addClass('editor_loader_container');
+    _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
+    _sassThemeEditor.controls.editor_loader_container.appendTo(_sassThemeEditor.controls.editor_container);
+
+    _sassThemeEditor.controls.editor_loader = $('<div></div>');
+    _sassThemeEditor.controls.editor_loader.attr('id', 'editor_loader_' + _sassThemeEditor.id);
+    _sassThemeEditor.controls.editor_loader.addClass('editor_loader');
+    _sassThemeEditor.controls.editor_loader.appendTo(_sassThemeEditor.controls.editor_loader_container);
+
     // Get Data
     // Populate User Interface
     _sassThemeEditor.getVariables();
@@ -117,6 +130,14 @@ var SassThemeEditor = function () {
   };
 
   _sassThemeEditor.compile = function () {
+    // Performance guard
+    if(_sassThemeEditor.isCompiling !== false) {
+      return;
+    }
+    console.log('SassThemeEditor.compile(): Compiling Sass.');
+    _sassThemeEditor.isCompiling = true;
+    _sassThemeEditor.controls.editor_loader_container.removeClass('hidden');
+    var sassCompiler = new Sass();
     // Build Variabless.css
     var variables = '\n';
     $.each(_sassThemeEditor.sassVariablesModel, function(i, variable) {
@@ -139,9 +160,12 @@ var SassThemeEditor = function () {
       });
     });
     // Compile
-    _sassThemeEditor.sassCompiler.compile(variables + stylesheets, function (result) {
+    sassCompiler.compile(variables + stylesheets, function (result) {
+      _sassThemeEditor.isCompiling = false;
+      _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
+
       if(result.status == 0) {
-        console.log('compiled sass');
+        console.log('SassThemeEditor.compile(): Compiled Sass.');
       } else {
         console.error(result);
         return false;
@@ -149,6 +173,7 @@ var SassThemeEditor = function () {
       _sassThemeEditor.controls.editor_apply_style.text( result.text );
       return result;
     });
+
   };
 
   _sassThemeEditor.getVariables = function () {
@@ -265,6 +290,9 @@ var SassThemeEditor = function () {
 
       _sassThemeEditor.controls.editor_size_value.val(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value);
     });
+    _sassThemeEditor.controls.editor_color_preview.click(function () {
+      _sassThemeEditor.handleUIUpdated();
+    })
   };
 
   _sassThemeEditor.handleOnVariableChange = function() {
@@ -312,8 +340,8 @@ var SassThemeEditor = function () {
   };
 
   _sassThemeEditor.handleUIUpdated = function () {
-    
-    _sassThemeEditor.compile();
+      clearTimeout(_sassThemeEditor.uiTimeout);
+      _sassThemeEditor.uiTimeout = setTimeout(_sassThemeEditor.compile, _sassThemeEditor.uiUpdateTimeout);
   }
   _sassThemeEditor.generateUUID = function () {
     var d = new Date().getTime();
