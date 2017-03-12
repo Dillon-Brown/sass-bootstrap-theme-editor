@@ -1,1 +1,4 @@
 .idea/
+themes/SuiteP/css/*.css
+themes/SuiteP/css/*.css.map
+!style.css

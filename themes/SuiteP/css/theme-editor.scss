@@ -1,0 +1,76 @@
+/**** Sass Theme Editor ***/
+@import 'variables';
+@mixin margin_below_control() {
+  margin-bottom: 24px;
+}
+
+.sass-theme-editor {
+  background-color: $theme-background;
+  border-radius: 4px;
+  border-color: transparent;
+  height: 512px;
+  padding: 8px;
+  width: 256px;
+  text-align: center;
+
+  label {
+    display: block;
+    text-align: left;
+  }
+
+  .editor_variable_select_container {
+    @include margin_below_control();
+  }
+
+  .editor_color_picker_container {
+    @include margin_below_control();
+    text-align: center;
+  }
+
+  .editor_size_slider_container {
+    @include  margin_below_control();
+    text-align: center;
+  }
+
+  .editor_color_value {
+    display: inline-block;
+    width: 85%;
+  }
+
+  .editor_color_preview {
+    color: $navbar-link-color;
+    border-radius: 4px;
+    display: inline-block;
+    float: right;
+    height: $input-line-height;
+    line-height: $input-line-height;
+    margin: 5px;
+    padding: 5px;
+    width: 10%;
+  }
+
+  .editor_color_picker {
+    margin: 10px auto 0 auto;
+    width: 200px;
+  }
+
+  .editor_color_picker_reset {
+    margin: 10px auto 0 auto;
+  }
+
+  .editor_variable_select_input {
+    width: 100%;
+  }
+
+  .editor_size_reset_reset {
+    margin-top: 10px;
+  }
+
+  .editor_loader {
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+}
