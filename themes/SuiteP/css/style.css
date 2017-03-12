@@ -18598,6 +18598,7 @@ iframe.teamNoticeBox {
     display: inline-block;
     width: 85%; }
   .sass-theme-editor .editor_color_preview {
+    color: #FFFFFF;
     border-radius: 4px;
     display: inline-block;
     float: right;
@@ -18616,14 +18617,10 @@ iframe.teamNoticeBox {
   .sass-theme-editor .editor_size_reset_reset {
     margin-top: 10px; }
   .sass-theme-editor .editor_loader {
-    background-color: #FFFFFF;
-    background-image: url("../images/loading.gif");
     background-repeat: no-repeat;
     border-radius: 4px;
     display: inline-block;
-    height: 64px;
     margin: 0;
-    padding: 0;
-    width: 64px; }
+    padding: 0; }
 
 /*# sourceMappingURL=style.css.map */

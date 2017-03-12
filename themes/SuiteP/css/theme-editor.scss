@@ -38,6 +38,7 @@
   }
 
   .editor_color_preview {
+    color: $navbar-link-color;
     border-radius: 4px;
     display: inline-block;
     float: right;
@@ -66,14 +67,10 @@
   }
 
   .editor_loader {
-    background-color: $main-alternate-bg;
-    background-image: url('../images/loading.gif');
     background-repeat: no-repeat;
     border-radius: 4px;
     display: inline-block;
-    height: 64px;
     margin: 0;
     padding: 0;
-    width: 64px;
   }
 }

@@ -54,7 +54,7 @@ var SassThemeEditor = function () {
     $('<label for="'+_sassThemeEditor.controls.editor_color_value.attr('id')+'">'+_sassThemeEditor.getLabel('LBL_EDITOR_COLOR_VALUE')+'</label>').appendTo(_sassThemeEditor.controls.editor_color_picker_container);
     _sassThemeEditor.controls.editor_color_value.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
 
-    _sassThemeEditor.controls.editor_color_preview = $('<div></div>');
+    _sassThemeEditor.controls.editor_color_preview = $('<div><span class="glyphicon glyphicon-refresh"></span></div>');
     _sassThemeEditor.controls.editor_color_preview.attr('id', 'editor_color_preview_' + _sassThemeEditor.id);
     _sassThemeEditor.controls.editor_color_preview.addClass('editor_color_preview');
     _sassThemeEditor.controls.editor_color_preview.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
@@ -111,7 +111,7 @@ var SassThemeEditor = function () {
     _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
     _sassThemeEditor.controls.editor_loader_container.appendTo(_sassThemeEditor.controls.editor_container);
 
-    _sassThemeEditor.controls.editor_loader = $('<div></div>');
+    _sassThemeEditor.controls.editor_loader = $('<div>'+_sassThemeEditor.getLabel('LBL_LOADING')+'</div>');
     _sassThemeEditor.controls.editor_loader.attr('id', 'editor_loader_' + _sassThemeEditor.id);
     _sassThemeEditor.controls.editor_loader.addClass('editor_loader');
     _sassThemeEditor.controls.editor_loader.appendTo(_sassThemeEditor.controls.editor_loader_container);
