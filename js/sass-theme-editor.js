@@ -9,7 +9,7 @@ var SassThemeEditor = function () {
   _sassThemeEditor.sassSelectedVariable = 0;
   _sassThemeEditor.controls = {};
   _sassThemeEditor.uiTimeout = null;
-  _sassThemeEditor.uiUpdateTimeout = 300;
+  _sassThemeEditor.uiUpdateTimeout = 50;
   _sassThemeEditor.isCompiling = false;
   _sassThemeEditor.isSettingCurrentVariable = true;
 
