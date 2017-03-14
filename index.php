@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="css/farbtastic.css">
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <style>
-
         .color-preview {
             height: 64px;
             width: 64px;
@@ -856,7 +855,7 @@
     </div>
     <!--End Responsive Sidebar -->
     <!--Start Page content -->    </div>
-<div id="content" class="content" style="margin-left: 25%;">
+<div id="content" class="content" style="padding-left: 25%;">
     <div class="container main-container bootstrap-container">
         <div></div>
         <div class="starter-template">
