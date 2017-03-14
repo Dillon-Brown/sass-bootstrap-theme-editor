@@ -101,6 +101,12 @@ var SassThemeEditor = function () {
     _sassThemeEditor.controls.editor_size_reset.addClass('editor_size_reset_reset');
     _sassThemeEditor.controls.editor_size_reset.appendTo(_sassThemeEditor.controls.editor_size_slider_container );
 
+    _sassThemeEditor.controls.editor_size_refresh = $('<button class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>');
+    _sassThemeEditor.controls.editor_size_refresh.attr('id', 'editor_size_refresh_' + _sassThemeEditor.id);
+    _sassThemeEditor.controls.editor_size_refresh.addClass('editor_size_reset_reset');
+    _sassThemeEditor.controls.editor_size_refresh.appendTo(_sassThemeEditor.controls.editor_size_slider_container );
+
+
     _sassThemeEditor.controls.editor_apply_style = $("<style></style>");
     _sassThemeEditor.controls.editor_apply_style.attr('id', 'editor_apply_style_'+_sassThemeEditor.id);
     _sassThemeEditor.controls.editor_apply_style.appendTo(_sassThemeEditor.controls.editor_container);
@@ -109,7 +115,7 @@ var SassThemeEditor = function () {
     _sassThemeEditor.controls.editor_loader_container.attr('id', 'editor_loader_container_' + _sassThemeEditor.id);
     _sassThemeEditor.controls.editor_loader_container.addClass('editor_loader_container');
     _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
-    _sassThemeEditor.controls.editor_loader_container.appendTo(_sassThemeEditor.controls.editor_container);
+    _sassThemeEditor.controls.editor_loader_container.appendTo(_sassThemeEditor.controls.editor_widget);
 
     _sassThemeEditor.controls.editor_loader = $('<div>'+_sassThemeEditor.getLabel('LBL_LOADING')+'</div>');
     _sassThemeEditor.controls.editor_loader.attr('id', 'editor_loader_' + _sassThemeEditor.id);
@@ -290,9 +296,11 @@ var SassThemeEditor = function () {
 
       _sassThemeEditor.controls.editor_size_value.val(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value);
     });
+    _sassThemeEditor.controls.editor_size_value.change(_sassThemeEditor.handlerOnChangeSize);
+    _sassThemeEditor.controls.editor_size_refresh.click(_sassThemeEditor.handlerOnChangeSize);
     _sassThemeEditor.controls.editor_color_preview.click(function () {
       _sassThemeEditor.handleUIUpdated();
-    })
+    });
   };
 
   _sassThemeEditor.handleOnVariableChange = function() {
@@ -328,7 +336,6 @@ var SassThemeEditor = function () {
         break;
     }
     $(_sassThemeEditor.controls.editor_size_value).val( ui.value + unit );
-    _sassThemeEditor.handleUIUpdated();
   };
 
   _sassThemeEditor.handlerOnChangeColor = function (color) {
@@ -339,10 +346,16 @@ var SassThemeEditor = function () {
     _sassThemeEditor.handleUIUpdated();
   };
 
+  _sassThemeEditor.handlerOnChangeSize = function () {
+    _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value = _sassThemeEditor.controls.editor_size_value.val();
+    _sassThemeEditor.handleUIUpdated();
+  }
+
   _sassThemeEditor.handleUIUpdated = function () {
       clearTimeout(_sassThemeEditor.uiTimeout);
       _sassThemeEditor.uiTimeout = setTimeout(_sassThemeEditor.compile, _sassThemeEditor.uiUpdateTimeout);
   }
+
   _sassThemeEditor.generateUUID = function () {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
