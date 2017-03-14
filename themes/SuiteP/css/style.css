@@ -18581,7 +18581,7 @@ iframe.teamNoticeBox {
   border-color: transparent;
   height: 512px;
   padding: 8px;
-  width: 256px;
+  width: 320px;
   text-align: center; }
   .sass-theme-editor label {
     display: block;
@@ -18609,7 +18609,8 @@ iframe.teamNoticeBox {
     width: 10%; }
   .sass-theme-editor .editor_color_picker {
     margin: 10px auto 0 auto;
-    width: 200px; }
+    width: 200px;
+    border-radius: 4px; }
   .sass-theme-editor .editor_color_picker_reset {
     margin: 10px auto 0 auto; }
   .sass-theme-editor .editor_variable_select_input {

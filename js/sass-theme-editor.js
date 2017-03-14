@@ -410,6 +410,7 @@ var SassThemeEditor = function () {
     // TODO Wait for the user to stop and then compile change
     _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value = color;
     $(_sassThemeEditor.controls.editor_color_value).val(color);
+    $(_sassThemeEditor.controls.editor_color_picker).css('background-color', color);
     $(_sassThemeEditor.controls.editor_color_preview).css('background-color', color);
     _sassThemeEditor.handleUIUpdated();
   };
