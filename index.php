@@ -856,7 +856,7 @@
     </div>
     <!--End Responsive Sidebar -->
     <!--Start Page content -->    </div>
-<div id="content" class="content">
+<div id="content" class="content" style="margin-left: 25%;">
     <div class="container main-container bootstrap-container">
         <div></div>
         <div class="starter-template">
