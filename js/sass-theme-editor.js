@@ -207,7 +207,7 @@ var SassThemeEditor = function () {
             '"default_value":"' + variable[1].trim() + '",' +
             '"current_value":"' + variable[1].trim() + '",' +
             '"type":"'+variable_type+'",' +
-            '"label":"'+variable[0].trim().replace(/\$/g, 'lbl_').replace(/\-/g, '_').toUpperCase() +'",' +
+            '"label":"'+variable[0].trim().replace(/\$/g, 'lbl_theme_editor_').replace(/\-/g, '_').toUpperCase() +'",' +
             '"label_description":"'+variable[0].trim().replace(/\$/g, 'lbl_').replace(/\-/g, '_').toUpperCase() +'_DESCRIPTION"' +
             '}'
           ));
