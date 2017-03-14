@@ -357,4 +357,21 @@ var SassThemeEditor = function () {
     return label;
   }
 
+
+  /**
+   * Generates php language file for developers.
+   *
+   * You need to run construct() first before using this method.
+   */
+  _sassThemeEditor.generateLanguageFile = function() {
+    var variables = '';
+    $.each(_sassThemeEditor.sassVariablesModel, function(i, variable) {
+      variables += '$app_strings[\'' + variable.label + '\'] => \''+ _sassThemeEditor.getLabel(variable.label) + '\';';
+    });
+    if($('.language-file').length == 0) {
+      $('<p></p>').addClass('language-file').appendTo('.main-container');
+    }
+
+    $('.language-file').text(variables);
+  }
 };
