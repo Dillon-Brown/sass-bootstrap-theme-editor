@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="70"
+   height="16"
+   id="svg3786"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="radio.svg"
+   inkscape:export-filename="/var/www/html/sdk/instances/suitecrm-development-mysql/themes/SuiteP/images/forms/radio.png"
+   inkscape:export-xdpi="44.01841"
+   inkscape:export-ydpi="44.01841">
+  <defs
+     id="defs3788" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.598901"
+     inkscape:cx="7.5933114"
+     inkscape:cy="-22.509399"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3791">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,-16)">
+    <ellipse
+       style="fill:#ffffff;fill-opacity:1;stroke:#a1b1be;stroke-width:0.48398712;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="radio-checked-false-disabled-false"
+       cx="7.9979324"
+       cy="24.171017"
+       rx="7.7559395"
+       ry="7.5869894" />
+    <ellipse
+       id="radio-checked-true-disabled-false"
+       style="fill:#ffffff;fill-opacity:1;stroke:#a1b1be;stroke-width:0.48398712;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       cx="25.999313"
+       cy="24.171017"
+       rx="7.7559395"
+       ry="7.5869894" />
+    <ellipse
+       id="radio-checked-true-disabled-false-dot"
+       style="fill:#f08377;fill-opacity:1;stroke:none"
+       cx="26.049318"
+       cy="24.171017"
+       rx="4.0003066"
+       ry="3.9131665" />
+    <ellipse
+       style="fill:#f6f6f6;fill-opacity:1;stroke:#a1b1be;stroke-width:0.48924512;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="radio-checked-false-disabled-true"
+       cx="44.00069"
+       cy="24.000015"
+       rx="7.7532821"
+       ry="7.7553916" />
+    <ellipse
+       id="radio-checked-true-disabled-true"
+       style="fill:#f6f6f6;fill-opacity:1;stroke:#a1b1be;stroke-width:0.48398715;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       cx="62.002064"
+       cy="24.171017"
+       rx="7.7559395"
+       ry="7.5869899" />
+    <ellipse
+       style="fill:#f08377;fill-opacity:0.33333333;stroke:none"
+       id="radio-checked-true-disabled-true-dot"
+       cx="62.002064"
+       cy="24.171017"
+       rx="4.0003066"
+       ry="3.9131665" />
+  </g>
+</svg>
