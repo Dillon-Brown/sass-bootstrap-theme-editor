@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="32px"
-   height="32px"
+   width="64"
+   height="64"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="select.svg"
    inkscape:export-filename="/var/www/html/sdk/instances/suitecrm-development-mysql/themes/SuiteP/images/forms/select.png"
    inkscape:export-xdpi="135"
@@ -27,17 +27,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.197802"
-     inkscape:cx="0.19332651"
-     inkscape:cy="16"
-     inkscape:current-layer="layer1"
+     inkscape:zoom="7.9180417"
+     inkscape:cx="8.6438443"
+     inkscape:cy="37.541245"
+     inkscape:current-layer="svg2985"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1056"
-     inkscape:window-x="1920"
-     inkscape:window-y="24"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata2990">
@@ -52,20 +52,21 @@
     </rdf:RDF>
   </metadata>
   <g
-     id="layer1"
+     id="#icon-editor-select"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     transform="translate(0,32)">
     <rect
        style="fill:#a5e8d6;fill-opacity:1;stroke:none"
-       id="rect3764"
-       width="16"
-       height="32"
-       x="16"
-       y="0" />
+       id="icon-select-rect"
+       width="36.270161"
+       height="63.952343"
+       x="27.68218"
+       y="-31.952345" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="m 19,12.472522 11.103887,0 -5.214532,7.054956 -0.06134,0 z"
-       id="rect2993"
+       d="m 34.721642,-7.0258752 22.191238,0 -10.421299,14.0994056 -0.122588,0 z"
+       id="icon-select-arrow"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccc" />
   </g>
