@@ -869,6 +869,11 @@
           MySassThemeEditor.construct({'parent_container': '.sass-theme-editor-place'});
           MySassThemeEditor.controls.editor_variable_select_input.val("$navbar-bg").change();
         </script>
+        <div class="sass-icon-editor-place"></div>
+        <img src="themes/SuiteP/images/icon-editor/check.svg">
+        <img src="themes/SuiteP/images/icon-editor/radio.svg">
+        <img src="themes/SuiteP/images/icon-editor/select.svg">
+
     </div>
 </div>
 
