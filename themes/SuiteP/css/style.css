@@ -18574,9 +18574,15 @@ iframe.teamNoticeBox {
 
   .modal-calendar-settings .modal-content {
     width: 900px; } }
+#icon-editor-select rect {
+  fill: #A5E8D6 !important; }
+
+#icon-editor-select path {
+  fill: #FFFFFF !important; }
+
 /**** Sass Theme Editor ***/
 .sass-theme-editor {
-  background-color: #BFCAD3;
+  background-color: #FFFFFF;
   border-radius: 4px;
   border-color: transparent;
   height: 512px;
