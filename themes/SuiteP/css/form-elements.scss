@@ -125,12 +125,12 @@
   stroke: $input-radio-enabled-border-color !important;
 }
 
-#radio-checked-true-disabled-true-cross {
-  fill: $input-radio-disabled-cross !important;
-  opacity: $input-radio-disabled-cross-opacity !important;
+#radio-checked-true-disabled-true-dot {
+  fill: $input-radio-disabled-dot !important;
+  opacity: $input-radio-disabled-dot-opacity !important;
 }
 
-#radio-checked-true-disabled-false-cross {
-  fill: $input-radio-enabled-cross !important;
-  opacity: $input-radio-enabled-cross-opacity !important;
+#radio-checked-true-disabled-false-dot {
+  fill: $input-radio-enabled-dot !important;
+  opacity: $input-radio-enabled-dot-opacity !important;
 }
