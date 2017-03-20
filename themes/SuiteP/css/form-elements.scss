@@ -8,3 +8,26 @@
 }
 
 // radio
+#icon-editor-checkbox {
+  #checkbox-checked-true-disabled-true,
+  #checkbox-checked-false-disabled-true {
+    fill: $input-radio-disabled-bg !important;
+    stroke: $input-radio-disabled-border-color;
+  }
+
+  #checkbox-checked-true-disabled-false,
+  #checkbox-checked-false-disabled-false {
+    fill: $input-radio-enabled-bg !important;
+    stroke: $input-radio-enabled-border-color !important;
+  }
+
+  #checkbox-checked-true-disabled-true-cross {
+    fill: $input-radio-disabled-cross !important;
+    opacity: $input-radio-disabled-cross-opacity !important;
+  }
+
+  #checkbox-checked-true-disabled-false-cross {
+    fill: $input-radio-enabled-cross !important;
+    opacity: $input-radio-enabled-cross-opacity !important;
+  }
+}
