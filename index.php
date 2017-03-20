@@ -863,17 +863,35 @@
             <p class="lead">Use the controls to change the properties of the nav bar.</p>
             <p>This takes variables and css written in Sass and compiles them in the browser.</p>
         </div>
-        <div class="sass-theme-editor-place"></div>
+        <div class="sass-theme-editor-place">
+            <div class="sass-icon-editor-place">
+                <div class="select-preview">
+                    <div class="input">
+                        <select type="text" value="Test"></select>
+                    </div>
+                    <div class="icon">
+                        <img src="themes/SuiteP/images/icon-editor/select.svg">
+                    </div>
+                </div>
+                <div class="radio-preview">
+                    <div class="icon">
+                        <img src="themes/SuiteP/images/icon-editor/radio.svg">
+                    </div>
+                </div>
+                <div class="check-preview">
+                    <div class="icon">
+                        <img src="themes/SuiteP/images/icon-editor/check.svg">
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
           var MySassThemeEditor = new SassThemeEditor();
           MySassThemeEditor.construct({'parent_container': '.sass-theme-editor-place'});
           MySassThemeEditor.controls.editor_variable_select_input.val("$navbar-bg").change();
         </script>
-        <div class="sass-icon-editor-place">
-        <img src="themes/SuiteP/images/icon-editor/check.svg">
-        <img src="themes/SuiteP/images/icon-editor/radio.svg">
-        <img src="themes/SuiteP/images/icon-editor/select.svg">
-        </div>
+
+
 
     </div>
 </div>
