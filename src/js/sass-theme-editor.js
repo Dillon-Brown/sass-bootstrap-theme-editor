@@ -1,175 +1,175 @@
 var SassThemeEditor = function () {
-  var _sassThemeEditor = this;
+  var self = this;
 
-  _sassThemeEditor.id = '';
-  _sassThemeEditor.sassVariablesModel = [];
-  _sassThemeEditor.sassVariablesChanged = [];
-  _sassThemeEditor.sassStylesheetIndex = [];
-  _sassThemeEditor.sassStylesheetFiles = [];
-  _sassThemeEditor.sassSelectedVariable = 0;
-  _sassThemeEditor.controls = {};
-  _sassThemeEditor.uiTimeout = null;
-  _sassThemeEditor.uiUpdateTimeout = 50;
-  _sassThemeEditor.isCompiling = false;
-  _sassThemeEditor.isSettingCurrentVariable = true;
+  self.id = '';
+  self.sassVariablesModel = [];
+  self.sassVariablesChanged = [];
+  self.sassStylesheetIndex = [];
+  self.sassStylesheetFiles = [];
+  self.sassSelectedVariable = 0;
+  self.controls = {};
+  self.uiTimeout = null;
+  self.uiUpdateTimeout = 50;
+  self.isCompiling = false;
+  self.isSettingCurrentVariable = true;
 
-  _sassThemeEditor.construct = function (options) {
-    _sassThemeEditor.id = _sassThemeEditor.generateUUID();
+  self.construct = function (options) {
+    self.id = self.generateUUID();
 
     // Construct User Interface
-    _sassThemeEditor.controls.editor_container = $("<div></div>");
-    _sassThemeEditor.controls.editor_container.attr('id', _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_container.addClass('sass-theme-editor');
+    self.controls.editor_container = $("<div></div>");
+    self.controls.editor_container.attr('id', self.id);
+    self.controls.editor_container.addClass('sass-theme-editor');
     if(typeof options.parent_container !== 'undefined') {
-      _sassThemeEditor.controls.editor_container.appendTo(options.parent_container);
+      self.controls.editor_container.appendTo(options.parent_container);
     } else {
-      _sassThemeEditor.controls.editor_container.appendTo('body');
+      self.controls.editor_container.appendTo('body');
     }
 
-    _sassThemeEditor.controls.editor_widget = $('<div></div>');
-    _sassThemeEditor.controls.editor_widget.attr('id', 'editor_widget_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_widget.addClass('editor_widget');
-    _sassThemeEditor.controls.editor_widget.appendTo(_sassThemeEditor.controls.editor_container);
+    self.controls.editor_widget = $('<div></div>');
+    self.controls.editor_widget.attr('id', 'editor_widget_' + self.id);
+    self.controls.editor_widget.addClass('editor_widget');
+    self.controls.editor_widget.appendTo(self.controls.editor_container);
 
-    _sassThemeEditor.controls.editor_variable_select_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_variable_select_container.attr('id', 'editor_variable_select_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_variable_select_container.addClass('editor_variable_select_container');
-    _sassThemeEditor.controls.editor_variable_select_container.appendTo(_sassThemeEditor.controls.editor_widget);
+    self.controls.editor_variable_select_container = $('<div></div>');
+    self.controls.editor_variable_select_container.attr('id', 'editor_variable_select_container_' + self.id);
+    self.controls.editor_variable_select_container.addClass('editor_variable_select_container');
+    self.controls.editor_variable_select_container.appendTo(self.controls.editor_widget);
 
-    _sassThemeEditor.controls.editor_variable_select_input = $('<select>');
-    _sassThemeEditor.controls.editor_variable_select_input.attr('id', 'editor_variable_select_input_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_variable_select_input.addClass('editor_variable_select_input');
-    _sassThemeEditor.controls.editor_variable_select_input.addClass('form_control');
-    $('<label for="'+_sassThemeEditor.controls.editor_variable_select_input.attr('id')+'">'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_VARIABLE_SELECT_INPUT')+'</label>').appendTo(_sassThemeEditor.controls.editor_variable_select_container);
-    _sassThemeEditor.controls.editor_variable_select_input.appendTo(_sassThemeEditor.controls.editor_variable_select_container);
+    self.controls.editor_variable_select_input = $('<select>');
+    self.controls.editor_variable_select_input.attr('id', 'editor_variable_select_input_' + self.id);
+    self.controls.editor_variable_select_input.addClass('editor_variable_select_input');
+    self.controls.editor_variable_select_input.addClass('form_control');
+    $('<label for="'+self.controls.editor_variable_select_input.attr('id')+'">'+self.getLabel('LBL_THEME_EDITOR_VARIABLE_SELECT_INPUT')+'</label>').appendTo(self.controls.editor_variable_select_container);
+    self.controls.editor_variable_select_input.appendTo(self.controls.editor_variable_select_container);
 
-    _sassThemeEditor.controls.editor_color_picker_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_color_picker_container.attr('id', 'editor_color_picker_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_picker_container.addClass('editor_color_picker_container');
-    _sassThemeEditor.controls.editor_color_picker_container.appendTo(_sassThemeEditor.controls.editor_widget);
+    self.controls.editor_color_picker_container = $('<div></div>');
+    self.controls.editor_color_picker_container.attr('id', 'editor_color_picker_container_' + self.id);
+    self.controls.editor_color_picker_container.addClass('editor_color_picker_container');
+    self.controls.editor_color_picker_container.appendTo(self.controls.editor_widget);
 
-    _sassThemeEditor.controls.editor_color_value = $('<input>');
-    _sassThemeEditor.controls.editor_color_value.attr('id', 'editor_color_value_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_value.addClass('editor_color_value');
-    _sassThemeEditor.controls.editor_color_value.addClass('form-control');
-    $('<label for="'+_sassThemeEditor.controls.editor_color_value.attr('id')+'">'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_COLOR_VALUE')+'</label>').appendTo(_sassThemeEditor.controls.editor_color_picker_container);
-    _sassThemeEditor.controls.editor_color_value.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
+    self.controls.editor_color_value = $('<input>');
+    self.controls.editor_color_value.attr('id', 'editor_color_value_' + self.id);
+    self.controls.editor_color_value.addClass('editor_color_value');
+    self.controls.editor_color_value.addClass('form-control');
+    $('<label for="'+self.controls.editor_color_value.attr('id')+'">'+self.getLabel('LBL_THEME_EDITOR_COLOR_VALUE')+'</label>').appendTo(self.controls.editor_color_picker_container);
+    self.controls.editor_color_value.appendTo(self.controls.editor_color_picker_container);
 
-    _sassThemeEditor.controls.editor_color_preview = $('<div><span class="glyphicon glyphicon-refresh"></span></div>');
-    _sassThemeEditor.controls.editor_color_preview.attr('id', 'editor_color_preview_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_preview.addClass('editor_color_preview');
-    _sassThemeEditor.controls.editor_color_preview.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
+    self.controls.editor_color_preview = $('<div><span class="glyphicon glyphicon-refresh"></span></div>');
+    self.controls.editor_color_preview.attr('id', 'editor_color_preview_' + self.id);
+    self.controls.editor_color_preview.addClass('editor_color_preview');
+    self.controls.editor_color_preview.appendTo(self.controls.editor_color_picker_container);
 
-    _sassThemeEditor.controls.editor_color_picker = $('<div></div>');
-    _sassThemeEditor.controls.editor_color_picker.attr('id', 'editor_color_picker_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_picker.addClass('editor_color_picker');
-    _sassThemeEditor.controls.editor_color_picker.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
+    self.controls.editor_color_picker = $('<div></div>');
+    self.controls.editor_color_picker.attr('id', 'editor_color_picker_' + self.id);
+    self.controls.editor_color_picker.addClass('editor_color_picker');
+    self.controls.editor_color_picker.appendTo(self.controls.editor_color_picker_container);
 
-    _sassThemeEditor.controls.editor_color_picker_reset = $('<button class="btn btn-danger">'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_RESET_COLOR')+'</button>');
-    _sassThemeEditor.controls.editor_color_picker_reset.attr('id', 'editor_color_picker_reset_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_picker_reset.addClass('editor_color_picker_reset');
-    _sassThemeEditor.controls.editor_color_picker_reset.appendTo(_sassThemeEditor.controls.editor_color_picker_container );
+    self.controls.editor_color_picker_reset = $('<button class="btn btn-danger">'+self.getLabel('LBL_THEME_EDITOR_RESET_COLOR')+'</button>');
+    self.controls.editor_color_picker_reset.attr('id', 'editor_color_picker_reset_' + self.id);
+    self.controls.editor_color_picker_reset.addClass('editor_color_picker_reset');
+    self.controls.editor_color_picker_reset.appendTo(self.controls.editor_color_picker_container );
 
-    _sassThemeEditor.controls.editor_color_value_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_color_value_container.attr('id', 'editor_color_value_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_color_value_container.addClass('editor_color_value_container');
-    _sassThemeEditor.controls.editor_color_value_container.appendTo(_sassThemeEditor.controls.editor_color_picker_container);
+    self.controls.editor_color_value_container = $('<div></div>');
+    self.controls.editor_color_value_container.attr('id', 'editor_color_value_container_' + self.id);
+    self.controls.editor_color_value_container.addClass('editor_color_value_container');
+    self.controls.editor_color_value_container.appendTo(self.controls.editor_color_picker_container);
 
-    _sassThemeEditor.controls.editor_size_slider_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_size_slider_container.attr('id', 'editor_size_slider_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_slider_container.addClass('editor_size_slider_container');
-    _sassThemeEditor.controls.editor_size_slider_container.appendTo(_sassThemeEditor.controls.editor_widget);
+    self.controls.editor_size_slider_container = $('<div></div>');
+    self.controls.editor_size_slider_container.attr('id', 'editor_size_slider_container_' + self.id);
+    self.controls.editor_size_slider_container.addClass('editor_size_slider_container');
+    self.controls.editor_size_slider_container.appendTo(self.controls.editor_widget);
 
-    _sassThemeEditor.controls.editor_size_value_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_size_value_container.attr('id', 'editor_size_value_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_value_container.addClass('editor_size_value_container');
-    _sassThemeEditor.controls.editor_size_value_container.appendTo(_sassThemeEditor.controls.editor_size_slider_container);
+    self.controls.editor_size_value_container = $('<div></div>');
+    self.controls.editor_size_value_container.attr('id', 'editor_size_value_container_' + self.id);
+    self.controls.editor_size_value_container.addClass('editor_size_value_container');
+    self.controls.editor_size_value_container.appendTo(self.controls.editor_size_slider_container);
 
-    _sassThemeEditor.controls.editor_size_value = $('<input>');
-    _sassThemeEditor.controls.editor_size_value.attr('id', 'editor_size_value_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_value.addClass('editor_size_value');
-    _sassThemeEditor.controls.editor_size_value.addClass('form-control');
-    $('<label for="'+_sassThemeEditor.controls.editor_size_value.attr('id')+'">'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_SIZE_VALUE')+'</label>').appendTo(_sassThemeEditor.controls.editor_size_value_container);
-    _sassThemeEditor.controls.editor_size_value.appendTo(_sassThemeEditor.controls.editor_size_value_container);
+    self.controls.editor_size_value = $('<input>');
+    self.controls.editor_size_value.attr('id', 'editor_size_value_' + self.id);
+    self.controls.editor_size_value.addClass('editor_size_value');
+    self.controls.editor_size_value.addClass('form-control');
+    $('<label for="'+self.controls.editor_size_value.attr('id')+'">'+self.getLabel('LBL_THEME_EDITOR_SIZE_VALUE')+'</label>').appendTo(self.controls.editor_size_value_container);
+    self.controls.editor_size_value.appendTo(self.controls.editor_size_value_container);
 
-    _sassThemeEditor.controls.editor_size_slider = $('<div></div>');
-    _sassThemeEditor.controls.editor_size_slider.attr('id', 'editor_size_slider_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_slider.addClass('editor_size_slider');
-    _sassThemeEditor.controls.editor_size_slider.appendTo(_sassThemeEditor.controls.editor_size_slider_container);
+    self.controls.editor_size_slider = $('<div></div>');
+    self.controls.editor_size_slider.attr('id', 'editor_size_slider_' + self.id);
+    self.controls.editor_size_slider.addClass('editor_size_slider');
+    self.controls.editor_size_slider.appendTo(self.controls.editor_size_slider_container);
 
-    _sassThemeEditor.controls.editor_size_reset = $('<button class="btn btn-danger">'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_RESET_SIZE')+'</button>');
-    _sassThemeEditor.controls.editor_size_reset.attr('id', 'editor_size_reset_reset_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_reset.addClass('editor_size_reset_reset');
-    _sassThemeEditor.controls.editor_size_reset.appendTo(_sassThemeEditor.controls.editor_size_slider_container );
+    self.controls.editor_size_reset = $('<button class="btn btn-danger">'+self.getLabel('LBL_THEME_EDITOR_RESET_SIZE')+'</button>');
+    self.controls.editor_size_reset.attr('id', 'editor_size_reset_reset_' + self.id);
+    self.controls.editor_size_reset.addClass('editor_size_reset_reset');
+    self.controls.editor_size_reset.appendTo(self.controls.editor_size_slider_container );
 
-    _sassThemeEditor.controls.editor_size_refresh = $('<button class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>');
-    _sassThemeEditor.controls.editor_size_refresh.attr('id', 'editor_size_refresh_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_size_refresh.addClass('editor_size_reset_reset');
-    _sassThemeEditor.controls.editor_size_refresh.appendTo(_sassThemeEditor.controls.editor_size_slider_container );
+    self.controls.editor_size_refresh = $('<button class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>');
+    self.controls.editor_size_refresh.attr('id', 'editor_size_refresh_' + self.id);
+    self.controls.editor_size_refresh.addClass('editor_size_reset_reset');
+    self.controls.editor_size_refresh.appendTo(self.controls.editor_size_slider_container );
 
 
-    _sassThemeEditor.controls.editor_apply_style = $("<style></style>");
-    _sassThemeEditor.controls.editor_apply_style.attr('id', 'editor_apply_style_'+_sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_apply_style.appendTo(_sassThemeEditor.controls.editor_container);
+    self.controls.editor_apply_style = $("<style></style>");
+    self.controls.editor_apply_style.attr('id', 'editor_apply_style_'+self.id);
+    self.controls.editor_apply_style.appendTo(self.controls.editor_container);
 
-    _sassThemeEditor.controls.editor_loader_container = $('<div></div>');
-    _sassThemeEditor.controls.editor_loader_container.attr('id', 'editor_loader_container_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_loader_container.addClass('editor_loader_container');
-    _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
-    _sassThemeEditor.controls.editor_loader_container.appendTo(_sassThemeEditor.controls.editor_widget);
+    self.controls.editor_loader_container = $('<div></div>');
+    self.controls.editor_loader_container.attr('id', 'editor_loader_container_' + self.id);
+    self.controls.editor_loader_container.addClass('editor_loader_container');
+    self.controls.editor_loader_container.addClass('hidden');
+    self.controls.editor_loader_container.appendTo(self.controls.editor_widget);
 
-    _sassThemeEditor.controls.editor_loader = $('<div>'+_sassThemeEditor.getLabel('LBL_THEME_EDITOR_COMPILING')+'</div>');
-    _sassThemeEditor.controls.editor_loader.attr('id', 'editor_loader_' + _sassThemeEditor.id);
-    _sassThemeEditor.controls.editor_loader.addClass('editor_loader');
-    _sassThemeEditor.controls.editor_loader.appendTo(_sassThemeEditor.controls.editor_loader_container);
+    self.controls.editor_loader = $('<div>'+self.getLabel('LBL_THEME_EDITOR_COMPILING')+'</div>');
+    self.controls.editor_loader.attr('id', 'editor_loader_' + self.id);
+    self.controls.editor_loader.addClass('editor_loader');
+    self.controls.editor_loader.appendTo(self.controls.editor_loader_container);
 
     // Get Data
     // Populate User Interface
-    _sassThemeEditor.getVariables();
-    _sassThemeEditor.getSassFiles();
+    self.getVariables();
+    self.getSassFiles();
 
     // Construct UI Dependencies
-    _sassThemeEditor.constructUIDependencies();
+    self.constructUIDependencies();
   };
 
-  _sassThemeEditor.destruct = function () {
+  self.destruct = function () {
     // remove the elements from the DOM which were created by this class
   };
 
-  _sassThemeEditor.compile = function () {
+  self.compile = function () {
     // Performance guard
-    if(_sassThemeEditor.isCompiling !== false) {
+    if(self.isCompiling !== false) {
       return;
     }
     console.log('SassThemeEditor.compile(): Compiling Sass.');
-    _sassThemeEditor.isCompiling = true;
-    _sassThemeEditor.controls.editor_loader_container.removeClass('hidden');
+    self.isCompiling = true;
+    self.controls.editor_loader_container.removeClass('hidden');
     var sassCompiler = new Sass();
     // Build Variabless.css
     var variables = '\n';
-    $.each(_sassThemeEditor.sassVariablesModel, function(i, variable) {
+    $.each(self.sassVariablesModel, function(i, variable) {
       variables += variable.name + ': ' + variable.current_value + ';\n';
     });
 
     // Check which variables have changed
     // Process only the values that have changed
-    if(_sassThemeEditor.sassVariablesChanged.indexOf(_sassThemeEditor.sassSelectedVariable) === -1) {
-      _sassThemeEditor.sassVariablesChanged.push(_sassThemeEditor.sassSelectedVariable);
+    if(self.sassVariablesChanged.indexOf(self.sassSelectedVariable) === -1) {
+      self.sassVariablesChanged.push(self.sassSelectedVariable);
     }
 
     // TODO: include only the files which the changed variables are kept in
     var stylesheets = '';
-    $(_sassThemeEditor.sassStylesheetFiles).each(function (iStylesheet, stylesheet) {
-      $(_sassThemeEditor.sassVariablesChanged).each(function (iVariable, variable) {
-        if(stylesheet.sass.indexOf(_sassThemeEditor.sassVariablesModel[variable].name) !== -1) {
+    $(self.sassStylesheetFiles).each(function (iStylesheet, stylesheet) {
+      $(self.sassVariablesChanged).each(function (iVariable, variable) {
+        if(stylesheet.sass.indexOf(self.sassVariablesModel[variable].name) !== -1) {
           stylesheets += stylesheet.sass;
         }
       });
     });
     // Compile
     sassCompiler.compile(variables + stylesheets, function (result) {
-      _sassThemeEditor.isCompiling = false;
-      _sassThemeEditor.controls.editor_loader_container.addClass('hidden');
+      self.isCompiling = false;
+      self.controls.editor_loader_container.addClass('hidden');
 
       if(result.status == 0) {
         console.log('SassThemeEditor.compile(): Compiled Sass.');
@@ -177,14 +177,14 @@ var SassThemeEditor = function () {
         console.error(result);
         return false;
       }
-      _sassThemeEditor.controls.editor_apply_style.text( result.text );
+      self.controls.editor_apply_style.text( result.text );
       return result;
     });
 
   };
 
-  _sassThemeEditor.getVariables = function () {
-    _sassThemeEditor.controls.editor_variable_select_input.empty();
+  self.getVariables = function () {
+    self.controls.editor_variable_select_input.empty();
 
     $.ajax({
       url: 'themes/SuiteP/css/variables.scss',
@@ -208,7 +208,7 @@ var SassThemeEditor = function () {
             variable_type = 'undefined';
           }
 
-            _sassThemeEditor.sassVariablesModel.push(jQuery.parseJSON(
+            self.sassVariablesModel.push(jQuery.parseJSON(
             '{'+
             '"name":' + '"'+ variable[0].trim() + '",' +
             '"default_value":"' + variable[1].trim() + '",' +
@@ -220,7 +220,7 @@ var SassThemeEditor = function () {
 
           $('<option value="'+ variable[0].trim() +'">' +
             variable[0].trim().replace(/\$/g, 'lbl_theme_editor_').replace(/\-/g, '_').toUpperCase()+
-          '</option>').appendTo(_sassThemeEditor.controls.editor_variable_select_input);
+          '</option>').appendTo(self.controls.editor_variable_select_input);
         }
       }
     });
@@ -249,9 +249,9 @@ var SassThemeEditor = function () {
 
           // TODO find duplicate
 
-          if(_sassThemeEditor.variablesIndexOf(variable[0].trim()) === -1) {
-            var v = _sassThemeEditor.variablesIndexOf(variable[0].trim());
-            _sassThemeEditor.sassVariablesModel[v] =
+          if(self.variablesIndexOf(variable[0].trim()) === -1) {
+            var v = self.variablesIndexOf(variable[0].trim());
+            self.sassVariablesModel[v] =
             jQuery.parseJSON(
               '{'+
               '"name":' + '"'+ variable[0].trim() + '",' +
@@ -262,7 +262,7 @@ var SassThemeEditor = function () {
               '}'
             )
           } else {
-              _sassThemeEditor.sassVariablesModel.push(jQuery.parseJSON(
+              self.sassVariablesModel.push(jQuery.parseJSON(
               '{'+
               '"name":' + '"'+ variable[0].trim() + '",' +
               '"default_value":"' + variable[1].trim() + '",' +
@@ -275,15 +275,15 @@ var SassThemeEditor = function () {
 
           $('<option value="'+ variable[0].trim() +'">' +
             variable[0].trim().replace(/\$/g, 'lbl_theme_editor_').replace(/\-/g, '_').toUpperCase()+
-          '</option>').appendTo(_sassThemeEditor.controls.editor_variable_select_input);
+          '</option>').appendTo(self.controls.editor_variable_select_input);
         }
       }
     });
   };
 
-  _sassThemeEditor.variablesIndexOf = function(name) {
-    for(var i = 0; i < _sassThemeEditor.sassVariablesModel.length; i++) {
-      if(_sassThemeEditor.sassVariablesModel[i].name == name) {
+  self.variablesIndexOf = function(name) {
+    for(var i = 0; i < self.sassVariablesModel.length; i++) {
+      if(self.sassVariablesModel[i].name == name) {
         return i;
       }
     }
@@ -291,7 +291,7 @@ var SassThemeEditor = function () {
     return -1;
   };
 
-  _sassThemeEditor.getSassFiles = function () {
+  self.getSassFiles = function () {
     $.ajax({
       url: 'themes/SuiteP/css/style.scss',
       async: false,
@@ -310,7 +310,7 @@ var SassThemeEditor = function () {
 
         if (sass_file[i].indexOf('.scss') !== -1) {
 
-          _sassThemeEditor.sassStylesheetIndex.push(sass_file[i].trim());
+          self.sassStylesheetIndex.push(sass_file[i].trim());
           // get the sass file
           $.ajax({
             url: 'themes/SuiteP/css/' + sass_file[i].trim(),
@@ -323,7 +323,7 @@ var SassThemeEditor = function () {
               "compiler_output": '',
             };
 
-            _sassThemeEditor.sassStylesheetFiles.push(file);
+            self.sassStylesheetFiles.push(file);
           });
 
         }
@@ -334,101 +334,101 @@ var SassThemeEditor = function () {
     // TODO: load custom
   };
 
-  _sassThemeEditor.constructUIDependencies = function () {
-    $(_sassThemeEditor.controls.editor_size_slider).slider({
-      value: _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value.replace('px', '').replace('%', '').replace('em', ''),
+  self.constructUIDependencies = function () {
+    $(self.controls.editor_size_slider).slider({
+      value: self.sassVariablesModel[self.sassSelectedVariable].current_value.replace('px', '').replace('%', '').replace('em', ''),
       // min: 30,
       // max: 120,
       step: 1,
-      slide: _sassThemeEditor.handlerOnChangeSlider
+      slide: self.handlerOnChangeSlider
     });
 
-    $(_sassThemeEditor.controls.editor_color_picker).farbtastic(_sassThemeEditor.controls.editor_color_picker);
-    $(_sassThemeEditor.controls.editor_color_value).keyup(function () {
-      $.farbtastic(_sassThemeEditor.controls.editor_color_picker).setColor($(_sassThemeEditor.controls.editor_color_value).val());
+    $(self.controls.editor_color_picker).farbtastic(self.controls.editor_color_picker);
+    $(self.controls.editor_color_value).keyup(function () {
+      $.farbtastic(self.controls.editor_color_picker).setColor($(self.controls.editor_color_value).val());
     });
-    $.farbtastic(_sassThemeEditor.controls.editor_color_picker).linkTo(_sassThemeEditor.handlerOnChangeColor);
-    $.farbtastic(_sassThemeEditor.controls.editor_color_picker).setColor($(_sassThemeEditor.controls.editor_color_value).val());
+    $.farbtastic(self.controls.editor_color_picker).linkTo(self.handlerOnChangeColor);
+    $.farbtastic(self.controls.editor_color_picker).setColor($(self.controls.editor_color_value).val());
 
-    _sassThemeEditor.controls.editor_variable_select_input.change(_sassThemeEditor.handleOnVariableChange);
-    _sassThemeEditor.controls.editor_color_picker_reset.click(function () {
-      $.farbtastic(_sassThemeEditor.controls.editor_color_picker).setColor(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].default_value);
+    self.controls.editor_variable_select_input.change(self.handleOnVariableChange);
+    self.controls.editor_color_picker_reset.click(function () {
+      $.farbtastic(self.controls.editor_color_picker).setColor(self.sassVariablesModel[self.sassSelectedVariable].default_value);
     });
-    _sassThemeEditor.controls.editor_size_reset.click(function () {
-      _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value = _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].default_value
-      $(_sassThemeEditor.controls.editor_size_slider).slider({
-        value: _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value.replace('px', '').replace('%', '').replace('em', ''),
+    self.controls.editor_size_reset.click(function () {
+      self.sassVariablesModel[self.sassSelectedVariable].current_value = self.sassVariablesModel[self.sassSelectedVariable].default_value
+      $(self.controls.editor_size_slider).slider({
+        value: self.sassVariablesModel[self.sassSelectedVariable].current_value.replace('px', '').replace('%', '').replace('em', ''),
       });
 
-      _sassThemeEditor.controls.editor_size_value.val(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value);
+      self.controls.editor_size_value.val(self.sassVariablesModel[self.sassSelectedVariable].current_value);
     });
-    _sassThemeEditor.controls.editor_size_value.change(_sassThemeEditor.handlerOnChangeSize);
-    _sassThemeEditor.controls.editor_size_refresh.click(_sassThemeEditor.handlerOnChangeSize);
-    _sassThemeEditor.controls.editor_color_preview.click(function () {
-      _sassThemeEditor.handleUIUpdated();
+    self.controls.editor_size_value.change(self.handlerOnChangeSize);
+    self.controls.editor_size_refresh.click(self.handlerOnChangeSize);
+    self.controls.editor_color_preview.click(function () {
+      self.handleUIUpdated();
     });
   };
 
-  _sassThemeEditor.handleOnVariableChange = function() {
-    _sassThemeEditor.isSettingCurrentVariable = true;
+  self.handleOnVariableChange = function() {
+    self.isSettingCurrentVariable = true;
     // TODO Handle when user selects a variable
-   _sassThemeEditor.sassSelectedVariable = _sassThemeEditor.controls.editor_variable_select_input.prop('selectedIndex');
-   switch (_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].type) {
+   self.sassSelectedVariable = self.controls.editor_variable_select_input.prop('selectedIndex');
+   switch (self.sassVariablesModel[self.sassSelectedVariable].type) {
      case "color_hex":
-       _sassThemeEditor.controls.editor_color_picker_container.removeClass('hidden');
-       _sassThemeEditor.controls.editor_size_slider_container.addClass('hidden');
-       _sassThemeEditor.controls.editor_color_value.val(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value);
-       $.farbtastic(_sassThemeEditor.controls.editor_color_picker).setColor($(_sassThemeEditor.controls.editor_color_value).val());
+       self.controls.editor_color_picker_container.removeClass('hidden');
+       self.controls.editor_size_slider_container.addClass('hidden');
+       self.controls.editor_color_value.val(self.sassVariablesModel[self.sassSelectedVariable].current_value);
+       $.farbtastic(self.controls.editor_color_picker).setColor($(self.controls.editor_color_value).val());
        break;
      case "size_px":
-       _sassThemeEditor.controls.editor_size_slider_container.removeClass('hidden');
-       _sassThemeEditor.controls.editor_color_picker_container.addClass('hidden');
-       _sassThemeEditor.controls.editor_size_value.val(_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value);
+       self.controls.editor_size_slider_container.removeClass('hidden');
+       self.controls.editor_color_picker_container.addClass('hidden');
+       self.controls.editor_size_value.val(self.sassVariablesModel[self.sassSelectedVariable].current_value);
        break;
      default:
-       _sassThemeEditor.controls.editor_size_slider_container.addClass('hidden');
-       _sassThemeEditor.controls.editor_color_picker_container.addClass('hidden');
+       self.controls.editor_size_slider_container.addClass('hidden');
+       self.controls.editor_color_picker_container.addClass('hidden');
        break;
    }
-   _sassThemeEditor.isSettingCurrentVariable = false;
+   self.isSettingCurrentVariable = false;
   };
 
-  _sassThemeEditor.handlerOnChangeSlider = function (event, ui) {
+  self.handlerOnChangeSlider = function (event, ui) {
     // TODO Wait for the user to stop and then compile change
     var unit = '';
-    switch (_sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].type) {
+    switch (self.sassVariablesModel[self.sassSelectedVariable].type) {
       case "size_px":
         unit = 'px';
         break;
       default:
         break;
     }
-    $(_sassThemeEditor.controls.editor_size_value).val( ui.value + unit );
+    $(self.controls.editor_size_value).val( ui.value + unit );
   };
 
-  _sassThemeEditor.handlerOnChangeColor = function (color) {
+  self.handlerOnChangeColor = function (color) {
     // TODO Wait for the user to stop and then compile change
-    _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value = color;
-    $(_sassThemeEditor.controls.editor_color_value).val(color);
-    $(_sassThemeEditor.controls.editor_color_picker).css('background-color', color);
-    $(_sassThemeEditor.controls.editor_color_preview).css('background-color', color);
-    _sassThemeEditor.handleUIUpdated();
+    self.sassVariablesModel[self.sassSelectedVariable].current_value = color;
+    $(self.controls.editor_color_value).val(color);
+    $(self.controls.editor_color_picker).css('background-color', color);
+    $(self.controls.editor_color_preview).css('background-color', color);
+    self.handleUIUpdated();
   };
 
-  _sassThemeEditor.handlerOnChangeSize = function () {
-    _sassThemeEditor.sassVariablesModel[_sassThemeEditor.sassSelectedVariable].current_value = _sassThemeEditor.controls.editor_size_value.val();
-    _sassThemeEditor.handleUIUpdated();
+  self.handlerOnChangeSize = function () {
+    self.sassVariablesModel[self.sassSelectedVariable].current_value = self.controls.editor_size_value.val();
+    self.handleUIUpdated();
   }
 
-  _sassThemeEditor.handleUIUpdated = function () {
-    if(_sassThemeEditor.isSettingCurrentVariable === true) {
+  self.handleUIUpdated = function () {
+    if(self.isSettingCurrentVariable === true) {
       return false;
     }
-      clearTimeout(_sassThemeEditor.uiTimeout);
-      _sassThemeEditor.uiTimeout = setTimeout(_sassThemeEditor.compile, _sassThemeEditor.uiUpdateTimeout);
+      clearTimeout(self.uiTimeout);
+      self.uiTimeout = setTimeout(self.compile, self.uiUpdateTimeout);
   }
 
-  _sassThemeEditor.generateUUID = function () {
+  self.generateUUID = function () {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = (d + Math.random()*16)%16 | 0;
@@ -438,7 +438,7 @@ var SassThemeEditor = function () {
     return uuid;
   };
 
-  _sassThemeEditor.getLabel = function (label) {
+  self.getLabel = function (label) {
     return label;
   }
 
@@ -448,10 +448,10 @@ var SassThemeEditor = function () {
    *
    * You need to run construct() first before using this method.
    */
-  _sassThemeEditor.generateLanguageFile = function() {
+  self.generateLanguageFile = function() {
     var labels = '';
-    $.each(_sassThemeEditor.sassVariablesModel, function(i, variable) {
-      labels += '$app_strings[\'' + variable.label + '\'] => \''+ _sassThemeEditor.getLabel(variable.label) + '\';';
+    $.each(self.sassVariablesModel, function(i, variable) {
+      labels += '$app_strings[\'' + variable.label + '\'] => \''+ self.getLabel(variable.label) + '\';';
     });
    
     console.log(labels);
