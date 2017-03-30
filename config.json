@@ -1,0 +1,6 @@
+{
+  "paths": {
+    "sass": "vendor/twbs/bootstrap/scss",
+    "variables": "vendor/twbs/bootstrap/scss/_variables.scss"
+  }
+}
