@@ -34,9 +34,14 @@
 
     self.id = '';
     self.controls = {};
+    self.themeGraph = {};
 
     var opts = $.extend({}, $.fn.sassBootstrapThemeEditor.defaults, options);
 
+    /**
+     * Create a unique id
+     * @returns {string}
+     */
     self.generateUUID = function () {
       "use strict";
       var d = new Date().getTime();
@@ -47,9 +52,32 @@
       });
     };
 
+    /**
+     * Translate label
+     * @param label
+     * @returns {*}
+     */
     self.getLabel = function (label) {
       return label;
-    }
+    };
+
+    /**
+     * Builds a JSON structure
+     * then stores it in localStorage
+     * then initialises editor
+     */
+    self.buildThemeGraph = function() {
+      self.themeGraph = {};
+      sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+    };
+
+    /**
+     * loads themeGraph JSON in localStorage
+     * then initialises editor
+     */
+    self.loadThemeGraph = function() {
+      self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
+    };
 
     /**
      * @constructor
@@ -176,11 +204,12 @@
         self.controls.editor_loader.appendTo(self.controls.editor_loader_container);
       }
 
-      if(localStorage.getItem('sassBootstrapThemeEditor') === null) {
-        localStorage.setItem('sassBootstrapThemeEditor', JSON.stringify({}));
+      if(sessionStorage.getItem('sassBootstrapThemeEditor') === null) {
         console.log('sassBootstrapThemeEditor - setting localStorage');
+        self.buildThemeGraph();
       } else {
         console.log('sassBootstrapThemeEditor - loading localStorage');
+        self.loadThemeGraph();
       }
     };
 
