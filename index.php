@@ -16,6 +16,7 @@
     <script src="src/js/farbtastic.js"></script>
     <script src="src/dist/sass.js"></script>
     <script src="src/js/sass-theme-editor.js"></script>
+    <script src="src/js/sass-bootstrap-theme-editor.js"></script>
 </head>
 <body>
 <?=file_get_contents(__DIR__.'/templates/index.html');?>
