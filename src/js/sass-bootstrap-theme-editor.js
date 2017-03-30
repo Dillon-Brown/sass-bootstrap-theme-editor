@@ -62,13 +62,57 @@
     };
 
     /**
+     *
+     * @param input
+     * @returns {XML|string|void}
+     */
+    self.removeSingleLineComments = function(input) {
+      return input.replace(/\/\/.+/g, '');
+    };
+
+    /**
+     *
+     * @param input
+     * @returns {XML|string|void}
+     */
+    self.removeMultiLineComments = function(input) {
+      return input.replace(/\/\*[^]*?\*\//g, '');
+    };
+
+    self.removeBlankLines = function (input) {
+      return input.replace(/^\s*[\r\n]/gm,'');
+    }
+
+    self.loadSassFile = function(path) {
+      $.when( $.ajax( path ) ).then(function( data, textStatus, jqXHR ) {
+        if(jqXHR.status >= 200 && jqXHR.status < 300) {
+          var sass_data = data;
+          sass_data = self.removeMultiLineComments(sass_data);
+          sass_data = self.removeSingleLineComments(sass_data);
+          sass_data = self.removeBlankLines(sass_data);
+          console.log(sass_data);
+          self.parseSassFile(sass_data);
+          sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+        }
+      });
+    };
+
+    self.parseSassFile = function(path) {
+      // break file into scopes
+      // @import = self.loadSassFile
+      // @mix-in = store like a specifier
+      // @include = reference @mix-in
+      // detect css properties
+    };
+    /**
      * Builds a JSON structure
      * then stores it in localStorage
      * then initialises editor
      */
     self.buildThemeGraph = function() {
       self.themeGraph = {};
-      sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+      var sass_index_path = opts.paths.sass_path +  opts.paths.index + opts.paths.file_extension;
+      self.loadSassFile(sass_index_path);
     };
 
     /**
@@ -211,6 +255,7 @@
         console.log('sassBootstrapThemeEditor - loading localStorage');
         self.loadThemeGraph();
       }
+      console.log('sassBootstrapThemeEditor - config', opts);
     };
 
     /**
@@ -229,5 +274,13 @@
    * Defaults
    * @type {{}}
    */
-  $.fn.sassBootstrapThemeEditor.defaults = {}
+  $.fn.sassBootstrapThemeEditor.defaults = {
+    "paths": {
+      "sass_path": "vendor/twbs/bootstrap/scss/",
+      "index": "bootstrap",
+      "variables": "_variables",
+      "file_prefix": '_',
+      "file_extension": '.scss'
+    }
+  }
 }(jQuery));
