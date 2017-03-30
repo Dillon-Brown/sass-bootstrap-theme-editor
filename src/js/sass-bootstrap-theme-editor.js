@@ -28,6 +28,9 @@
       console.error('sassBootstrapThemeEditor - Missing Dependency Required: JQuery UI Dialog');
       return self;
     }
+    if (typeof(Storage) === "undefined") {
+      console.error('sassBootstrapThemeEditor - Missing Dependency Required: Local Storage');
+    }
 
     self.id = '';
     self.controls = {};
@@ -60,17 +63,20 @@
 
         // Construct User Interface
         self.controls.dialog = $('<div></div>');
+        if(typeof self.parent() !== 'undefined') {
+          self.controls.dialog.appendTo(self.parent());
+        } else {
+          self.controls.dialog.appendTo('body');
+        }
 
         self.controls.editor_container = $("<div></div>");
         self.controls.editor_container.attr('id', self.id);
         self.controls.editor_container.addClass('sass-theme-editor');
-        if(typeof self.parent() !== 'undefined') {
-          self.controls.editor_container.appendTo(self.parent());
-        } else {
-          self.controls.editor_container.appendTo('body');
-        }
+        self.controls.editor_container.appendTo(self.controls.dialog);
 
-        self.controls.editor_container.dialog();
+        self.controls.dialog.dialog();
+        self.controls.dialog.dialog("option", "width", 420);
+        self.controls.dialog.dialog("option", "height", 380);
 
         self.controls.editor_widget = $('<div></div>');
         self.controls.editor_widget.attr('id', 'editor_widget_' + self.id);
@@ -168,6 +174,13 @@
         self.controls.editor_loader.attr('id', 'editor_loader_' + self.id);
         self.controls.editor_loader.addClass('editor_loader');
         self.controls.editor_loader.appendTo(self.controls.editor_loader_container);
+      }
+
+      if(localStorage.getItem('sassBootstrapThemeEditor') === null) {
+        localStorage.setItem('sassBootstrapThemeEditor', JSON.stringify({}));
+        console.log('sassBootstrapThemeEditor - setting localStorage');
+      } else {
+        console.log('sassBootstrapThemeEditor - loading localStorage');
       }
     };
 
