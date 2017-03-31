@@ -120,8 +120,9 @@
         // add default scope
         scopes.push({
           "path": path,
-          "value": sass_data,
-          "children": []
+          "source": sass_data,
+          "children": [],
+          "test": "",
         });
       } else {
         // build scope
@@ -141,14 +142,16 @@
 
           // Return result
           return {
-            "name": "",
-            "value": "",
+            "path": "",
+            "source": scope_data,
             "children": [],
             "test": myScopes
           }
         };
         scopes.push(buildScopes(sass_data));
       }
+
+      // Parse sass
       // @import = self.loadSassFile
       // @mix-in = store like a scope
       // @include = reference @mix-in
@@ -160,7 +163,7 @@
       self.themeGraph.parsed.push({
         "path": path,
         "source": sass_data,
-        "tree": scopes
+        "children": scopes
       });
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
