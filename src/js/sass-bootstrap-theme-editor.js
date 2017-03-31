@@ -130,7 +130,7 @@
     };
     /**
      * Builds a JSON structure
-     * then stores it in localStorage
+     * then stores it in sessionStorage
      * then initialises editor
      */
     self.buildThemeGraph = function() {
@@ -140,7 +140,7 @@
     };
 
     /**
-     * loads themeGraph JSON in localStorage
+     * loads themeGraph JSON in sessionStorage
      * then initialises editor
      */
     self.loadThemeGraph = function() {
@@ -274,10 +274,10 @@
       }
 
       if(sessionStorage.getItem('sassBootstrapThemeEditor') === null) {
-        console.log('sassBootstrapThemeEditor - setting localStorage');
+        console.log('sassBootstrapThemeEditor - setting sessionStorage');
         self.buildThemeGraph();
       } else {
-        console.log('sassBootstrapThemeEditor - loading localStorage');
+        console.log('sassBootstrapThemeEditor - loading sessionStorage');
         self.loadThemeGraph();
       }
       console.log('sassBootstrapThemeEditor - config', opts);
