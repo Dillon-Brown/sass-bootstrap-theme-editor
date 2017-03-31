@@ -58,6 +58,7 @@
      * @returns string
      */
     self.getLabel = function (label) {
+      "use strict";
       return label;
     };
 
@@ -67,6 +68,7 @@
      * @returns {string|void}
      */
     self.removeSingleLineComments = function(input) {
+      "use strict";
       return input.replace(/(\/\/*[^]*?)([\r\n])/g, '');
     };
 
@@ -76,6 +78,7 @@
      * @returns {string|void}
      */
     self.removeMultiLineComments = function(input) {
+      "use strict";
       return input.replace(/\/\*[^]*?\*\//g, '');
     };
 
@@ -85,10 +88,12 @@
      * @returns {string|void}
      */
     self.removeBlankLines = function (input) {
+      "use strict";
       return input.replace(/^\s*[\r\n]/gm,'');
     }
 
     self.removeReturns = function (input) {
+      "use strict";
       return input.replace(/[\r\n]/g,'');
     }
 
@@ -96,6 +101,7 @@
      * @param path string
      */
     self.loadSassFile = function(path) {
+      "use strict";
       $.when( $.ajax( path ) ).then(function( data, textStatus, jqXHR ) {
         if(jqXHR.status >= 200 && jqXHR.status < 300) {
           var sass_data = data;
@@ -110,6 +116,7 @@
      * @returns boolean
     */
     self.parseSassFile = function(path, data) {
+      "use strict";
       var sass_data = self.removeMultiLineComments(data);
       sass_data = self.removeSingleLineComments(sass_data);
       sass_data = self.removeBlankLines(sass_data);
@@ -118,6 +125,7 @@
       var scopes = [];
         // build scope
         var buildScopes = function (scope_data) {
+          "use strict";
           // Pre processing
           var myScopes = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
           // Fixes
@@ -188,6 +196,7 @@
      * then initialises editor
      */
     self.buildThemeGraph = function() {
+      "use strict";
       self.themeGraph = {};
       var sass_index_path = opts.paths.sass_path +  opts.paths.index + opts.paths.file_extension;
       self.loadSassFile(sass_index_path);
@@ -199,6 +208,7 @@
      * then initialises editor
      */
     self.loadThemeGraph = function() {
+      "use strict";
       if(opts.debug === true) {
         self.buildThemeGraph();
       } else {
