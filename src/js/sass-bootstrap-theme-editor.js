@@ -118,12 +118,21 @@
       var scopes = [];
       if(sass_data.indexOf('{') === -1) {
         // add default scope
-        scopes.push({
-          "path": path,
-          "source": sass_data,
-          "children": [],
-          "test": "",
-        });
+        if(opts.debug) {
+          var $ret = {
+            "path": "",
+            "source": scope_data,
+            "children": [],
+            "test": myScopes
+          };
+        } else {
+          var $ret = {
+            "path": "",
+            "children": []
+          };
+        }
+
+        scopes.push($ret);
       } else {
         // build scope
         var buildScopes = function (scope_data) {
@@ -141,12 +150,21 @@
           // break out properties and trim off the whitespace at the beginning and ends.
 
           // Return result
-          return {
-            "path": "",
-            "source": scope_data,
-            "children": [],
-            "test": myScopes
-          }
+         if(opts.debug) {
+           var $ret = {
+             "path": "",
+             "source": scope_data,
+             "children": [],
+             "test": myScopes
+           };
+         } else {
+           var $ret = {
+             "path": "",
+             "children": [],
+           };
+         }
+
+          return $ret;
         };
         scopes.push(buildScopes(sass_data));
       }
