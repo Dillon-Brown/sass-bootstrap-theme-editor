@@ -123,8 +123,8 @@
       // @include = reference @mix-in
       // detect css properties
       return {
-        "path": path
-        "source":data
+        "path": path,
+        "source": data
       };
     };
     /**
