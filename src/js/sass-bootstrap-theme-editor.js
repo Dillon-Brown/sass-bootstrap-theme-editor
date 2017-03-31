@@ -67,7 +67,7 @@
      * @returns {string|void}
      */
     self.removeSingleLineComments = function(input) {
-      return input.replace(/\/\/.+/g, '');
+      return input.replace(/(\/\/*[^]*?)([\r\n])/g, '');
     };
 
     /**
@@ -88,6 +88,10 @@
       return input.replace(/^\s*[\r\n]/gm,'');
     }
 
+    self.removeReturns = function (input) {
+      return input.replace(/[\r\n]/g,'');
+    }
+
     /**
      * @param path string
      */
@@ -95,19 +99,7 @@
       $.when( $.ajax( path ) ).then(function( data, textStatus, jqXHR ) {
         if(jqXHR.status >= 200 && jqXHR.status < 300) {
           var sass_data = data;
-          sass_data = self.removeMultiLineComments(sass_data);
-          sass_data = self.removeSingleLineComments(sass_data);
-          sass_data = self.removeBlankLines(sass_data);
-          console.log(sass_data);
-          var parsed_data = self.parseSassFile(path, sass_data);
-          
-          if(typeof self.themeGraph.parsed === "undefined") {
-            self.themeGraph.parsed = [];
-          }
-
-          self.themeGraph.parsed.push(parsed_data);
-          console.log(self.themeGraph);
-          sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+          self.parseSassFile(path, sass_data);
         }
       });
     };
@@ -115,18 +107,52 @@
     /**
      * @param path string
      * @param data string
-     * @returns object
-     */
+     * @returns boolean
+    */
     self.parseSassFile = function(path, data) {
+      var sass_data = self.removeMultiLineComments(data);
+      sass_data = self.removeSingleLineComments(sass_data);
+      sass_data = self.removeBlankLines(sass_data);
+      sass_data = self.removeReturns(sass_data);
       // break file into scopes
+      var scopes = [];
+      if(sass_data.indexOf('{') === -1) {
+        // add default scope
+        scopes.push({
+          "path": path,
+          "value": sass_data,
+          "children": {}
+        });
+      } else {
+        // build scope
+        var buildScopes = function (scope_data) {
+          var myScopes = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+
+          return {
+            "name": "",
+            "value": "",
+            "children": {},
+            "test": myScopes
+          }
+        };
+        scopes.push(buildScopes(sass_data));
+      }
       // @import = self.loadSassFile
-      // @mix-in = store like a specifier
+      // @mix-in = store like a scope
       // @include = reference @mix-in
       // detect css properties
-      return {
+      if(typeof self.themeGraph.parsed === "undefined") {
+        self.themeGraph.parsed = [];
+      }
+
+      self.themeGraph.parsed.push({
         "path": path,
-        "source": data
-      };
+        "source": sass_data,
+        "tree": scopes
+      });
+      console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
+      sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+      return true;
     };
     /**
      * Builds a JSON structure
@@ -137,6 +163,7 @@
       self.themeGraph = {};
       var sass_index_path = opts.paths.sass_path +  opts.paths.index + opts.paths.file_extension;
       self.loadSassFile(sass_index_path);
+      console.log('sassBootstrapThemeEditor - setting sessionStorage');
     };
 
     /**
@@ -144,8 +171,13 @@
      * then initialises editor
      */
     self.loadThemeGraph = function() {
-      self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
+      if(opts.debug === true) {
+        self.buildThemeGraph();
+      } else {
+        self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
+      }
       console.log("themeGraph", self.themeGraph);
+      console.log('sassBootstrapThemeEditor - loading sessionStorage');
     };
 
     /**
@@ -274,13 +306,11 @@
       }
 
       if(sessionStorage.getItem('sassBootstrapThemeEditor') === null) {
-        console.log('sassBootstrapThemeEditor - setting sessionStorage');
         self.buildThemeGraph();
       } else {
-        console.log('sassBootstrapThemeEditor - loading sessionStorage');
         self.loadThemeGraph();
       }
-      console.log('sassBootstrapThemeEditor - config', opts);
+      console.log('sassBootstrapThemeEditor - config ', opts);
     };
 
     /**
@@ -302,10 +332,11 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "bootstrap",
+      "index": "_tables",
       "variables": "_variables",
       "file_prefix": '_',
       "file_extension": '.scss'
-    }
+    },
+    "debug": true
   }
 }(jQuery));
