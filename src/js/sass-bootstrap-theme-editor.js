@@ -7,7 +7,7 @@
 (function ($) {
   /**
    * sassBootstrapThemeEditor
-   * @param options
+   * @param options object
    * @returns {jQuery}
    */
   $.fn.sassBootstrapThemeEditor = function (options) {
@@ -54,8 +54,8 @@
 
     /**
      * Translate label
-     * @param label
-     * @returns {*}
+     * @param label string
+     * @returns string
      */
     self.getLabel = function (label) {
       return label;
@@ -63,8 +63,8 @@
 
     /**
      *
-     * @param input
-     * @returns {XML|string|void}
+     * @param input string
+     * @returns {string|void}
      */
     self.removeSingleLineComments = function(input) {
       return input.replace(/\/\/.+/g, '');
@@ -72,17 +72,25 @@
 
     /**
      *
-     * @param input
-     * @returns {XML|string|void}
+     * @param input string
+     * @returns {string|void}
      */
     self.removeMultiLineComments = function(input) {
       return input.replace(/\/\*[^]*?\*\//g, '');
     };
 
+    /**
+     *
+     * @param input string
+     * @returns {string|void}
+     */
     self.removeBlankLines = function (input) {
       return input.replace(/^\s*[\r\n]/gm,'');
     }
 
+    /**
+     * @param path string
+     */
     self.loadSassFile = function(path) {
       $.when( $.ajax( path ) ).then(function( data, textStatus, jqXHR ) {
         if(jqXHR.status >= 200 && jqXHR.status < 300) {
@@ -97,7 +105,11 @@
       });
     };
 
-    self.parseSassFile = function(path) {
+    /**
+     * @param path string
+     * @param data string
+     */
+    self.parseSassFile = function(path, data) {
       // break file into scopes
       // @import = self.loadSassFile
       // @mix-in = store like a specifier
