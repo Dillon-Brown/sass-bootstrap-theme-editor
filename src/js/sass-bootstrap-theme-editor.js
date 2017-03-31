@@ -99,7 +99,13 @@
           sass_data = self.removeSingleLineComments(sass_data);
           sass_data = self.removeBlankLines(sass_data);
           console.log(sass_data);
-          self.parseSassFile(sass_data);
+          var parsed_data = self.parseSassFile(sass_data);
+          
+          if(typeof self.themeGraph.parsed === "undefined") {
+            self.themeGraph.parsed = [];
+          }
+
+          self.themeGraph.parsed.push(parsed_data);
           sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
         }
       });
@@ -108,6 +114,7 @@
     /**
      * @param path string
      * @param data string
+     * @returns object
      */
     self.parseSassFile = function(path, data) {
       // break file into scopes
@@ -115,6 +122,10 @@
       // @mix-in = store like a specifier
       // @include = reference @mix-in
       // detect css properties
+      return {
+        "path": path
+        "source":data
+      };
     };
     /**
      * Builds a JSON structure
