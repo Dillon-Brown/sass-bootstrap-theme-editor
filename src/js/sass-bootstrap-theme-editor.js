@@ -116,24 +116,6 @@
       sass_data = self.removeReturns(sass_data);
       // break file into scopes
       var scopes = [];
-      if(sass_data.indexOf('{') === -1) {
-        // add default scope
-        if(opts.debug) {
-          var $ret = {
-            "path": "",
-            "source": scope_data,
-            "children": [],
-            "test": myScopes
-          };
-        } else {
-          var $ret = {
-            "path": "",
-            "children": []
-          };
-        }
-
-        scopes.push($ret);
-      } else {
         // build scope
         var buildScopes = function (scope_data) {
           // Pre processing
@@ -150,24 +132,26 @@
           // break out properties and trim off the whitespace at the beginning and ends.
 
           // Return result
-         if(opts.debug) {
-           var $ret = {
+          var builtScope = {};
+         if(opts.debug === true) {
+           builtScope = {
+             "children": [],
              "path": "",
              "source": scope_data,
-             "children": [],
              "test": myScopes
            };
          } else {
-           var $ret = {
+           builtScope = {
              "path": "",
-             "children": [],
+             "children": []
            };
          }
 
-          return $ret;
+          return builtScope;
         };
+
         scopes.push(buildScopes(sass_data));
-      }
+
 
       // Parse sass
       // @import = self.loadSassFile
@@ -178,11 +162,22 @@
         self.themeGraph.parsed = [];
       }
 
-      self.themeGraph.parsed.push({
-        "path": path,
-        "source": sass_data,
-        "children": scopes
-      });
+      // Return result
+      var result = {};
+      if(opts.debug === true) {
+        result = {
+          "path": path,
+          "source": sass_data,
+          "children": scopes,
+        };
+      } else {
+        result = {
+          "path": path,
+          "children": scopes
+        };
+      }
+
+      self.themeGraph.parsed.push(result);
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
       return true;
