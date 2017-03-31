@@ -126,8 +126,18 @@
       } else {
         // build scope
         var buildScopes = function (scope_data) {
+          // Pre processing
           var myScopes = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          // Fixes
+          // handle multiple }} in the same item
+          // when item only contains { split out selectors from the previous item
 
+          // Process
+          // if ends in ; === property/properties
+          // if has { create child scope buildScopes(child_data)
+          // break out properties and trim off the whitespace at the beginning and ends.
+
+          // Return result
           return {
             "name": "",
             "value": "",
