@@ -134,6 +134,7 @@
           // using ([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+);
 
           // Process
+          // ignore items with just whitespace in them
           // if ends in ; === property/properties
           // if has { create child scope buildScopes(child_data)
           // break out properties and trim off the whitespace at the beginning and ends.
