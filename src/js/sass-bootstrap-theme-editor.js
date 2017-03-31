@@ -121,7 +121,7 @@
         scopes.push({
           "path": path,
           "value": sass_data,
-          "children": {}
+          "children": []
         });
       } else {
         // build scope
@@ -143,7 +143,7 @@
           return {
             "name": "",
             "value": "",
-            "children": {},
+            "children": [],
             "test": myScopes
           }
         };
