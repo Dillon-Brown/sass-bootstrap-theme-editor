@@ -99,13 +99,14 @@
           sass_data = self.removeSingleLineComments(sass_data);
           sass_data = self.removeBlankLines(sass_data);
           console.log(sass_data);
-          var parsed_data = self.parseSassFile(sass_data);
+          var parsed_data = self.parseSassFile(path, sass_data);
           
           if(typeof self.themeGraph.parsed === "undefined") {
             self.themeGraph.parsed = [];
           }
 
           self.themeGraph.parsed.push(parsed_data);
+          console.log(self.themeGraph);
           sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
         }
       });
@@ -144,6 +145,7 @@
      */
     self.loadThemeGraph = function() {
       self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
+      console.log("themeGraph", self.themeGraph);
     };
 
     /**
@@ -299,7 +301,7 @@
    */
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
-      "sass_path": "vendor/twbs/bootstrap/scss/",
+      "sass_path": "bower_components/bootstrap/scss/",
       "index": "bootstrap",
       "variables": "_variables",
       "file_prefix": '_',
