@@ -131,6 +131,7 @@
           // Fixes
           // handle multiple }} in the same item
           // when item only contains { split out selectors from the previous item
+          // using ([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+);
 
           // Process
           // if ends in ; === property/properties
