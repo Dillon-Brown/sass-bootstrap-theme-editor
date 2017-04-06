@@ -125,7 +125,9 @@
       var preProcess = function (scope_data) {
         "use strict";
           // Pre processing
-          var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          // var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          //([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})
           var retScopes = [];
           // Fixes
           for (var i = 0; i < lines.length; i++) {
@@ -160,6 +162,20 @@
               } else {
                 retScopes.push(lines[i]);
               }
+            } else if (lines[i].trim().match(/([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})/g) !== null) {
+                // debugger;
+                // handle selectors like .t-{$variable} {
+                // this mostly occurs with mix ins
+                  var sassVariable = lines[i].trim();
+                  // correct selector
+                  retScopes[retScopes.length -1] = retScopes[retScopes.length -1] + sassVariable;
+                  // check for stacked selectors
+                  // with ,
+                  var lastLine = retScopes[retScopes.length -1];
+                  if (lastLine.trim().indexOf(',') == 0) {
+                    retScopes.pop();
+                    retScopes[retScopes.length -1] = retScopes[retScopes.length -1] + lastLine;
+                  }
             } else if(lines[i].trim() !== "") {
               retScopes.push(lines[i]);
             }
@@ -253,7 +269,7 @@
                 }
                 
               }
-            } else if(scope_data_array[i].indexOf('{') !== -1) {
+            } else if(scope_data_array[i] === '{') {
               
               // Process / Build Scope
               // TODO:chandle one liners like a {color: black;}
@@ -486,7 +502,8 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "_alert",
+      "index": "mixins/_list-group",
+      // "index": "_alert",
       "variables": "_variables",
       "file_prefix": '_',
       "file_extension": '.scss'
