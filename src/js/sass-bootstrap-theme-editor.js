@@ -190,6 +190,7 @@
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
       return true;
     };
+    
     /**
      * Builds a JSON structure
      * then stores it in sessionStorage
