@@ -139,12 +139,13 @@
                 retScopes.push('}');
               }
             } else if (lines[i] === '{') {
+              // TODO: handle selectors like .t{$v} { and inline eg a { prop: val; }
               // Check to see if the selector name is inline with other properties
               // eg width: 100; .selector 
               var selectorLine = lines[i - 1];
 
               if (selectorLine.match(/([;])/g) !== null) {
-                // remove last elemtn from retScopes
+                // remove last element from retScopes
                 // as it inclused the inline issue described earlier
                 retScopes.pop();
 
@@ -172,38 +173,104 @@
         var buildScopes = function (scope_data_array) {
           "use strict";
           // Process
+          /**
+           * @parm scope_data pass in scope_data_array
+           * @parm starting_of_line = the line === '{'
+           * @returns the line the with the correct }
+           */
+         var getClosureScope = function(scope_data, starting_of_line) {
+            "use strict";
+            var stack = 0;
+            var line = starting_of_line;
+            for(var i = starting_of_line; i < scope_data.length; i++) {
+              if (scope_data[i] === '{') {
+                stack++;
+              } else if (scope_data[i] === '}') {
+                stack--;
+              }
+
+              if(stack <= 0) {
+                break;
+              }
+              line++;
+            }
+            return line;
+         }
+
+         var buildScope = function() {
+          "use strict";
+          if(opts.debug === true) {
+           return {
+             "children": [],
+             "path": "",
+             "source": scope_data_array,
+             "value": ""
+             };
+           } else {
+            return {
+               "path": "",
+               "children": [],
+               "value": ""
+             };
+           }
+         }
+
+         var returnScope = buildScope();
+
           // ignore items with just whitespace in them
           // if ends in ; === property/properties
           // if has { create child scope buildScopes(child_data)
           // break out properties and trim off the whitespace at the beginning and ends.
 
-          var stack = [];
-          // for(var i = 0; i < scope_data_array.length; i++) {
-          //   if(scope_data_array[i] === "") {
-          //     continue;
-          //   } else if(scope_data_array[i].indexOf('{') !== -1) {
-          //     // Process / Build Scope
-          //     // handle one liners like a {color: black;}
-          //   } else if(scope_data_array[i].indexOf(';') !== -1) {
-          //     // Process properties
-          //   }
-          // }
-          // Return result
-          var builtScope = {};
-         if(opts.debug === true) {
-           builtScope = {
-             "children": [],
-             "path": "",
-             "source": scope_data_array,
-           };
-         } else {
-           builtScope = {
-             "path": "",
-             "children": []
-           };
-         }
+          for(var i = 0; i < scope_data_array.length; i++) {
+            
+            if(scope_data_array[i] === "") {
+              continue;
+            } else if(scope_data_array[i].indexOf(';') !== -1) {
+              // Process properties
+              var properties = scope_data_array[i].split(';');
+              properties = properties.splice(0, properties.length - 1);
 
-          return builtScope;
+              for(var p = 0; p < properties.length; p++) {
+                var property = properties[p].split(':');
+
+                if (property !== "") {
+                  var propertyName = property[0].trim();
+                  var propertyValue = property[1];
+                  // add child object
+                  var childScope = buildScope();
+                  childScope.path = propertyName;
+                  childScope.value = propertyValue;
+                  returnScope.children.push(childScope);
+                } else {
+                  // eg just has a variable name
+                  var propertyValue = properties[p];
+                  // add child object
+                  var childScope = buildScope();
+                  childScope.path = " ";
+                  childScope.value = propertyValue;
+                  returnScope.children.push(childScope);
+                }
+                
+              }
+            } else if(scope_data_array[i].indexOf('{') !== -1) {
+              
+              // Process / Build Scope
+              // TODO:chandle one liners like a {color: black;}
+              var endOfClosure = getClosureScope(scope_data_array, i);
+              var childScope = buildScopes( scope_data_array.slice(i + 1, endOfClosure) );
+              childScope.path = scope_data_array[i - 1];
+              returnScope.children.push(childScope);
+              // since we have found the scope iterate i
+              // to the end of the closure
+              i = endOfClosure;
+            }
+            var test = true;
+          }
+          // Return result
+          
+
+          return returnScope;
         };
 
         scopes.push(buildScopes(preProcess(sass_data)));
@@ -419,7 +486,7 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "_badge",
+      "index": "_alert",
       "variables": "_variables",
       "file_prefix": '_',
       "file_extension": '.scss'
