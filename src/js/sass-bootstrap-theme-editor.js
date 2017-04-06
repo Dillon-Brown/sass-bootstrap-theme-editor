@@ -502,9 +502,12 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "mixins/_list-group",
-      // "index": "_alert",
+      "index": "_alert",
+      // include in every compile
       "variables": "_variables",
+      "mixins": "_mixins",
+      "utilities": "_utilties",
+      // options
       "file_prefix": '_',
       "file_extension": '.scss'
     },
