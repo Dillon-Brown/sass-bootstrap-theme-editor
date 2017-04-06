@@ -1,3 +1,24 @@
+<?php ?>
+<!DOCTYPE html>
+<htmL>
+<head>
+    <title>SASS In The Browser</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="src/css/farbtastic.css">
+    <link rel="stylesheet" href="src/css/jquery-ui.min.css">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="bower_components/tether/dist/js/tether.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="src/js/farbtastic.js"></script>
+    <script src="src/dist/sass.js"></script>
+    <script src="src/js/sass-theme-editor.js"></script>
+    <script src="src/js/sass-bootstrap-theme-editor.js"></script>
+</head>
+<body>
     <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -308,3 +329,10 @@
     <footer>
       Template
     </footer>
+
+
+<script>
+  $('body').sassBootstrapThemeEditor();
+</script>
+</body>
+</html>
