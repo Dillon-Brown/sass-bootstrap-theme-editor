@@ -122,31 +122,79 @@
       sass_data = self.removeBlankLines(sass_data);
       sass_data = self.removeReturns(sass_data);
       // break file into scopes
+      var preProcess = function (scope_data) {
+        "use strict";
+          // Pre processing
+          var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          var retScopes = [];
+          // Fixes
+          for (var i = 0; i < lines.length; i++) {
+            
+            lines[i] = lines[i].trim();
+
+            if (lines[i].match(/^([\}]{2,})/g) !== null) {
+              // handle multiple }} in the same item
+              var torn = lines[i].match(/(\})/g);
+              for (var t = 0; t < torn.length; t++) {
+                retScopes.push('}');
+              }
+            } else if (lines[i] === '{') {
+              // Check to see if the selector name is inline with other properties
+              // eg width: 100; .selector 
+              var selectorLine = lines[i - 1];
+
+              if (selectorLine.match(/([;])/g) !== null) {
+                // remove last elemtn from retScopes
+                // as it inclused the inline issue described earlier
+                retScopes.pop();
+
+                // split the properties from the selector
+                var exploded = selectorLine.split(/([;])/g);
+                // add each line to the result
+                var seperatedProperties = exploded.splice(0, exploded.length - 1).join("");
+                retScopes.push(seperatedProperties);
+                var sepratedSelector = exploded[exploded.length - 1];
+                retScopes.push( sepratedSelector );
+                retScopes.push(lines[i]);
+              } else {
+                retScopes.push(lines[i]);
+              }
+            } else if(lines[i].trim() !== "") {
+              retScopes.push(lines[i]);
+            }
+          }
+
+          return retScopes;
+      };
+
       var scopes = [];
         // build scope
-        var buildScopes = function (scope_data) {
+        var buildScopes = function (scope_data_array) {
           "use strict";
-          // Pre processing
-          var myScopes = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
-          // Fixes
-          // handle multiple }} in the same item
-          // when item only contains { split out selectors from the previous item
-          // using ([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+);
-
           // Process
           // ignore items with just whitespace in them
           // if ends in ; === property/properties
           // if has { create child scope buildScopes(child_data)
           // break out properties and trim off the whitespace at the beginning and ends.
 
+          var stack = [];
+          // for(var i = 0; i < scope_data_array.length; i++) {
+          //   if(scope_data_array[i] === "") {
+          //     continue;
+          //   } else if(scope_data_array[i].indexOf('{') !== -1) {
+          //     // Process / Build Scope
+          //     // handle one liners like a {color: black;}
+          //   } else if(scope_data_array[i].indexOf(';') !== -1) {
+          //     // Process properties
+          //   }
+          // }
           // Return result
           var builtScope = {};
          if(opts.debug === true) {
            builtScope = {
              "children": [],
              "path": "",
-             "source": scope_data,
-             "test": myScopes
+             "source": scope_data_array,
            };
          } else {
            builtScope = {
@@ -158,7 +206,7 @@
           return builtScope;
         };
 
-        scopes.push(buildScopes(sass_data));
+        scopes.push(buildScopes(preProcess(sass_data)));
 
 
       // Parse sass
@@ -371,7 +419,7 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "_tables",
+      "index": "_badge",
       "variables": "_variables",
       "file_prefix": '_',
       "file_extension": '.scss'
