@@ -100,12 +100,12 @@
     /**
      * @param path string
      */
-    self.loadSassFile = function(path) {
+    self.loadSassFile = function(path, file) {
       "use strict";
       $.when( $.ajax( path ) ).then(function( data, textStatus, jqXHR ) {
         if(jqXHR.status >= 200 && jqXHR.status < 300) {
           var sass_data = data;
-          self.parseSassFile(path, sass_data);
+          self.parseSassFile(file, sass_data);
         }
       });
     };
@@ -184,11 +184,16 @@
           return retScopes;
       };
 
-      var scopes = [];
         // build scope
-        var buildScopes = function (scope_data_array) {
+        var parseSass = function (scope_data_array, is_file, cache_level) {
           "use strict";
           // Process
+          if(typeof is_file === "undefined") {
+            is_file = false;
+          };
+          if(typeof cache_level === "undefined") {
+            cache_level = 'property';
+          };
           /**
            * @parm scope_data pass in scope_data_array
            * @parm starting_of_line = the line === '{'
@@ -213,31 +218,44 @@
             return line;
          }
 
-         var buildScope = function() {
+         var newScope = function() {
           "use strict";
           if(opts.debug === true) {
            return {
              "children": [],
              "path": "",
              "source": scope_data_array,
-             "value": ""
+             "value": "",
+             "is_file": is_file
              };
            } else {
             return {
                "path": "",
                "children": [],
-               "value": ""
+               "value": "",
+               "is_file": is_file
              };
            }
          }
 
-         var returnScope = buildScope();
+         var returnScope = newScope();
 
+          // Parse sass
+          // @import = self.loadSassFile
+          // // TODO: handle cache level options
+          //
+          // @mix-in = store like a scope
+          // @include = reference @mix-in
+          // detect css properties
           // ignore items with just whitespace in them
           // if ends in ; === property/properties
-          // if has { create child scope buildScopes(child_data)
-          // break out properties and trim off the whitespace at the beginning and ends.
-
+          // if has { create child scope parseSass(child_data)
+          // break out properties and trim off the whitespasce at the beginning and ends.
+          // TODO: when @ in a property is found, build them into a single value
+          // as mixins and conditional statements require the entire scope to be processed
+          // You cannot break them down on by property basis.
+          // the exception perhaps is the @media query
+          //
           for(var i = 0; i < scope_data_array.length; i++) {
             
             if(scope_data_array[i] === "") {
@@ -254,7 +272,7 @@
                   var propertyName = property[0].trim();
                   var propertyValue = property[1];
                   // add child object
-                  var childScope = buildScope();
+                  var childScope = newScope();
                   childScope.path = propertyName;
                   childScope.value = propertyValue;
                   returnScope.children.push(childScope);
@@ -262,7 +280,7 @@
                   // eg just has a variable name
                   var propertyValue = properties[p];
                   // add child object
-                  var childScope = buildScope();
+                  var childScope = newScope();
                   childScope.path = " ";
                   childScope.value = propertyValue;
                   returnScope.children.push(childScope);
@@ -274,7 +292,7 @@
               // Process / Build Scope
               // TODO:chandle one liners like a {color: black;}
               var endOfClosure = getClosureScope(scope_data_array, i);
-              var childScope = buildScopes( scope_data_array.slice(i + 1, endOfClosure) );
+              var childScope = parseSass( scope_data_array.slice(i + 1, endOfClosure) );
               childScope.path = scope_data_array[i - 1];
               returnScope.children.push(childScope);
               // since we have found the scope iterate i
@@ -289,34 +307,15 @@
           return returnScope;
         };
 
-        scopes.push(buildScopes(preProcess(sass_data)));
+      var scopes = parseSass(preProcess(sass_data, true));
+      scopes.path = path;
+      scopes.is_file = true
 
-
-      // Parse sass
-      // @import = self.loadSassFile
-      // @mix-in = store like a scope
-      // @include = reference @mix-in
-      // detect css properties
       if(typeof self.themeGraph.parsed === "undefined") {
         self.themeGraph.parsed = [];
       }
-
-      // Return result
-      var result = {};
-      if(opts.debug === true) {
-        result = {
-          "path": path,
-          "source": sass_data,
-          "children": scopes,
-        };
-      } else {
-        result = {
-          "path": path,
-          "children": scopes
-        };
-      }
-
-      self.themeGraph.parsed.push(result);
+      
+      self.themeGraph.parsed.push(scopes);
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
       return true;
@@ -331,7 +330,7 @@
       "use strict";
       self.themeGraph = {};
       var sass_index_path = opts.paths.sass_path +  opts.paths.index + opts.paths.file_extension;
-      self.loadSassFile(sass_index_path);
+      self.loadSassFile(sass_index_path, opts.paths.index);
       console.log('sassBootstrapThemeEditor - setting sessionStorage');
     };
 
@@ -502,11 +501,32 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "utilities/_align",
+      "index": "bootstrap",
       // include in every compile
       "variables": "_variables",
-      "mixins": "_mixins",
-      "utilities": "_utilties",
+      // Always send the following files to the compiler
+      "always-include":[
+        "_variables",
+        "_mixins",
+        "_utilties",
+      ],
+      // cache level (file, property)
+      // When sending sass to the compiler:
+      // if (file) only include the files used but include the entire file and its @imports
+      // if (property) only include the files used but only include the properties used
+      "cache": {
+        "level": "property",
+        "exceptions": [
+          {
+            "path":"_mixins",
+            "level": "file"
+          },
+          {
+            "path":"_utilties",
+            "level": "file"
+          },
+        ],
+      },
       // options
       "file_prefix": '_',
       "file_extension": '.scss'
