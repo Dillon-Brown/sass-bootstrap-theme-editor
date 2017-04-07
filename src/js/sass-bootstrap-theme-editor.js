@@ -125,7 +125,7 @@
       var preProcess = function (scope_data) {
         "use strict";
           // Pre processing
-          var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+          var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
           // var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
           //([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})
           var retScopes = [];
@@ -502,7 +502,7 @@
   $.fn.sassBootstrapThemeEditor.defaults = {
     "paths": {
       "sass_path": "bower_components/bootstrap/scss/",
-      "index": "_alert",
+      "index": "utilities/_align",
       // include in every compile
       "variables": "_variables",
       "mixins": "_mixins",
