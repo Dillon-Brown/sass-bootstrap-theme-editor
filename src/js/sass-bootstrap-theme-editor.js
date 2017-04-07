@@ -226,14 +226,16 @@
              "path": "",
              "source": scope_data_array,
              "value": "",
-             "is_file": is_file
+             "is_file": is_file,
+             "cache": "property"
              };
            } else {
             return {
                "path": "",
                "children": [],
                "value": "",
-               "is_file": is_file
+               "is_file": is_file,
+               "cache": "property"
              };
            }
          }
@@ -314,7 +316,7 @@
       if(typeof self.themeGraph.parsed === "undefined") {
         self.themeGraph.parsed = [];
       }
-      
+
       self.themeGraph.parsed.push(scopes);
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
@@ -518,11 +520,11 @@
         "level": "property",
         "exceptions": [
           {
-            "path":"_mixins",
+            "path":"mixins/*",
             "level": "file"
           },
           {
-            "path":"_utilties",
+            "path":"utilties/*",
             "level": "file"
           },
         ],
