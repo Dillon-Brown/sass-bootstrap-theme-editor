@@ -93,7 +93,7 @@
     self.removeBlankLines = function (input) {
       "use strict";
       return input.replace(/^\s*[\r\n]/gm, '');
-    }
+    };
 
     /**
      *
@@ -103,7 +103,23 @@
     self.removeReturns = function (input) {
       "use strict";
       return input.replace(/[\r\n]/g, '');
-    }
+    };
+
+    self.removeWarnDirectives = function(input) {
+      "use strict";
+      return input.replace(/(@warn[^]*?[;])/gm, '');
+    };
+
+    self.removeErrorDirectives = function(input) {
+      "use strict";
+      return input.replace(/(@error[^]*?[;])/gm, '');
+    };
+
+    self.removeDebugDirectives = function(input) {
+      "use strict";
+      return input.replace(/(@debug[^]*?[;])/gm, '');
+    };
+
 
     /**
      *
@@ -132,14 +148,15 @@
       sass_data = self.removeSingleLineComments(sass_data);
       sass_data = self.removeBlankLines(sass_data);
       sass_data = self.removeReturns(sass_data);
+      sass_data = self.removeWarnDirectives(sass_data);
+      sass_data = self.removeErrorDirectives(sass_data);
+      sass_data = self.removeDebugDirectives(sass_data);
+
       // break file into scopes
       var preProcess = function (scope_data) {
         "use strict";
         // Pre processing
         var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*\/\=\>\<\~]+)/gm);
-        // debugger;
-        // var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
-        //([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})
         var retScopes = [];
         // Fixes
         for (var i = 0; i < lines.length; i++) {
@@ -370,7 +387,7 @@
       var sass_index_path = opts.paths.sass_path + opts.paths.index + opts.paths.file_extension;
       self.loadSassFile(sass_index_path, opts.paths.index);
       console.log('sassBootstrapThemeEditor - setting sessionStorage');
-      // sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+      sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
     };
 
@@ -380,7 +397,7 @@
      */
     self.loadThemeGraph = function () {
       "use strict";
-      if (opts.debug === true) {
+      if (opts.reloadSessionStorage === true) {
         self.buildThemeGraph();
       } else {
         self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
@@ -579,6 +596,7 @@
       "file_prefix": '_',
       "file_extension": '.scss'
     },
-    "debug": true
+    "debug": false,
+    "reloadSessionStorage": true
   }
 }(jQuery));
