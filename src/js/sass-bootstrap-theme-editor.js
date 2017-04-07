@@ -69,7 +69,10 @@
      */
     self.removeSingleLineComments = function (input) {
       "use strict";
-      return input.replace(/(\/\/[^]*?)([\r\n])/g, '');
+      return input.replace(/^(\/{2,}[^]*?[\r\n])/gm, '')
+        .replace(/(?!:|;).(\/{2,}[^]*?[\r\n])/gm, '')
+        .replace(/(\;\/{2,}[^]*?[\r\n])/gm, ';');
+      // return input.replace(/(\/\/[^]*?)([\r\n])/g, '');
     };
 
     /**
@@ -110,12 +113,10 @@
      */
     self.loadSassFile = function (path, file) {
       "use strict";
-      $.when($.ajax(path)).then(function (data, textStatus, jqXHR) {
-        if (jqXHR.status >= 200 && jqXHR.status < 300) {
-          var sass_data = data;
-          self.parseSassFile(file, sass_data);
-        }
-      });
+      var response = $.ajax({"url": path, async: false});
+      var parsedFile = self.parseSassFile(file, response.responseText);
+      self.themeGraph.parsed.push(parsedFile);
+
     };
 
     /**
@@ -125,7 +126,9 @@
      */
     self.parseSassFile = function (path, data) {
       "use strict";
+      // "Minify"
       var sass_data = self.removeMultiLineComments(data);
+      // This method is known to cause issues:
       sass_data = self.removeSingleLineComments(sass_data);
       sass_data = self.removeBlankLines(sass_data);
       sass_data = self.removeReturns(sass_data);
@@ -133,7 +136,8 @@
       var preProcess = function (scope_data) {
         "use strict";
         // Pre processing
-        var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*\/]+)/gm);
+        var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*\/\=\>\<\~]+)/gm);
+        // debugger;
         // var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
         //([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})
         var retScopes = [];
@@ -299,15 +303,9 @@
                     // debugger;
                   } else {
                     fullSassFilePath = opts.paths.sass_path + opts.paths.file_prefix + propertyValue + opts.paths.file_extension;
-
                   }
-                  // import sass file
-                  var importScope = newScope();
-                  importScope.source = '';
-                  importScope.path = propertyValue;
-                  importScope.is_file = true;
 
-                  self.loadSassFile(fullSassFilePath, propertyValue);
+                  var wait = self.loadSassFile(fullSassFilePath, propertyValue);
                 }
 
                 // add child object
@@ -358,12 +356,7 @@
       var scopes = parseSass(preProcess(sass_data, true));
       scopes.path = path;
       scopes.is_file = true;
-
-      self.themeGraph.parsed.push(scopes);
-
-      console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
-      sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
-      return true;
+      return scopes;
     };
 
     /**
@@ -377,6 +370,8 @@
       var sass_index_path = opts.paths.sass_path + opts.paths.index + opts.paths.file_extension;
       self.loadSassFile(sass_index_path, opts.paths.index);
       console.log('sassBootstrapThemeEditor - setting sessionStorage');
+      // sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
+      console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
     };
 
     /**
