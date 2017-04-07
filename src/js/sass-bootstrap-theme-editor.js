@@ -69,7 +69,7 @@
      */
     self.removeSingleLineComments = function (input) {
       "use strict";
-      return input.replace(/(\/\/*[^]*?)([\r\n])/g, '');
+      return input.replace(/(\/\/[^]*?)([\r\n])/g, '');
     };
 
     /**
@@ -92,13 +92,21 @@
       return input.replace(/^\s*[\r\n]/gm, '');
     }
 
+    /**
+     *
+     * @param input
+     * @returns {XML|void|string}
+     */
     self.removeReturns = function (input) {
       "use strict";
       return input.replace(/[\r\n]/g, '');
     }
 
     /**
-     * @param path string
+     *
+     * @param path
+     * @param file
+     * @returns {*}
      */
     self.loadSassFile = function (path, file) {
       "use strict";
@@ -125,7 +133,7 @@
       var preProcess = function (scope_data) {
         "use strict";
         // Pre processing
-        var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
+        var lines = scope_data.split(/([\{][\$][:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+\}|[:a-zA-z\d\$\@\(\)\;\!\-\#\%\"\'\&\_\.\,\ \+\*\/]+)/gm);
         // var lines = scope_data.split(/([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)/gm);
         //([\{][\$])([:a-zA-z\d\$\@\(\)\;\-\#\%\"\'\&\_\.\,\ \+\*]+)(\})
         var retScopes = [];
@@ -271,14 +279,46 @@
 
             for (var p = 0; p < properties.length; p++) {
               var property = properties[p].split(':');
-
               if (property !== "") {
                 var propertyName = property[0].trim();
                 var propertyValue = property[1];
+
+                // Look for @import
+                if(propertyName.indexOf('@import') !== -1) {
+                  var importProperty = propertyName.trim().split(/(\s)/);
+                  propertyName = importProperty[0];
+                  propertyValue = importProperty.pop().replace(/(\")/g, '');
+                  var fullSassFilePath = '';
+                  if(propertyValue.indexOf('/') !== -1) {
+                    // load subdirectory
+                    var fileName = propertyValue.substring(propertyValue.lastIndexOf('/') + 1);
+
+                    fullSassFilePath =
+                      opts.paths.sass_path + propertyValue.substring(0, propertyValue.lastIndexOf('/')) + '/' +
+                      opts.paths.file_prefix + fileName + opts.paths.file_extension;
+                    // debugger;
+                  } else {
+                    fullSassFilePath = opts.paths.sass_path + opts.paths.file_prefix + propertyValue + opts.paths.file_extension;
+
+                  }
+                  // import sass file
+                  var importScope = newScope();
+                  importScope.source = '';
+                  importScope.path = propertyValue;
+                  importScope.is_file = true;
+
+                  self.loadSassFile(fullSassFilePath, propertyValue);
+                }
+
                 // add child object
                 var childScope = newScope();
                 childScope.path = propertyName;
                 childScope.value = propertyValue;
+                // catch edge case where @something is not handled
+                if(childScope.children.length === 0 && typeof childScope.value == "undefined") {
+                  childScope.path = " ";
+                  childScope.value = propertyName;
+                }
                 returnScope.children.push(childScope);
               } else {
                 // eg just has a variable name
@@ -303,7 +343,6 @@
             // to the end of the closure
             i = endOfClosure;
           }
-          var test = true;
         }
         // Return result
 
@@ -311,15 +350,17 @@
         return returnScope;
       };
 
-      var scopes = parseSass(preProcess(sass_data, true));
-      scopes.path = path;
-      scopes.is_file = true
-
       if (typeof self.themeGraph.parsed === "undefined") {
         self.themeGraph.parsed = [];
       }
 
+      $('<div>'+path+'</div>').addClass('sass-file').appendTo(self.controls.editor_widget_cache_loader);
+      var scopes = parseSass(preProcess(sass_data, true));
+      scopes.path = path;
+      scopes.is_file = true;
+
       self.themeGraph.parsed.push(scopes);
+
       console.log('sassBootstrapThemeEditor themeGraph: ', self.themeGraph);
       sessionStorage.setItem('sassBootstrapThemeEditor', JSON.stringify(self.themeGraph));
       return true;
@@ -349,7 +390,7 @@
       } else {
         self.themeGraph = $.parseJSON(sessionStorage.getItem('sassBootstrapThemeEditor'));
       }
-      console.log("themeGraph", self.themeGraph);
+      console.log("loaded themeGraph", self.themeGraph);
       console.log('sassBootstrapThemeEditor - loading sessionStorage');
     };
 
@@ -380,9 +421,17 @@
         self.controls.dialog.dialog("option", "width", 420);
         self.controls.dialog.dialog("option", "height", 380);
 
+        self.controls.editor_widget_cache_loader = $('<div></div>');
+        self.controls.editor_widget_cache_loader.attr('id', 'editor_widget_cache_loader_' + self.id);
+        self.controls.editor_widget_cache_loader.addClass('editor_widget');
+        self.controls.editor_widget_cache_loader.html('<div>'+ self.getLabel('LBL_CACHING_FILES') + '</div>');
+        self.controls.editor_widget_cache_loader.appendTo(self.controls.editor_container);
+
         self.controls.editor_widget = $('<div></div>');
         self.controls.editor_widget.attr('id', 'editor_widget_' + self.id);
         self.controls.editor_widget.addClass('editor_widget');
+        self.controls.editor_widget.addClass('hidden'); // Bootstrap 3
+        self.controls.editor_widget.attr('hidden', ''); // Bootstrap 4
         self.controls.editor_widget.appendTo(self.controls.editor_container);
 
         self.controls.editor_variable_select_container = $('<div></div>');
