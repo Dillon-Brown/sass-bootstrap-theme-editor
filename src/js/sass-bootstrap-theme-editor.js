@@ -377,6 +377,60 @@
     };
 
     /**
+     * Search theme graph to generate a graph of variables for the select option
+     */
+    self.buildVariableGraph = function () {
+      var searchVariables = function(node) {
+        for(var n = 0; n < node.children.length; n++) {
+          var childNode = node.children[n];
+          // ignore mix-ins / functions
+          if (childNode.path.indexOf('@mixin') !== -1) {
+           continue;
+          }
+
+          if (childNode.path.indexOf('@function') !== -1) {
+            continue;
+          }
+
+          if (childNode.path.trim().indexOf('$') === 0) {
+            // it's a variable!
+            if(typeof self.variables === "undefined") {
+              self.variables = [];
+            }
+
+          var variable_type = 'value';
+          if (childNode.value.trim().indexOf('#') === 0) {
+            variable_type = 'color_hex';
+          } else if (/px$/.test(childNode.value.trim())) {
+            variable_type = 'size_px';
+          }
+          var variableObj = {};
+          variableObj.name = childNode.path.trim();
+          variableObj.default_value = childNode.value.trim();
+          variableObj.current_value = childNode.value.trim();
+          variableObj.type = variable_type;
+          variableObj.label = childNode.path.trim().replace(/\$/g, 'lbl_theme_editor_').replace(/\-/g, '_').toUpperCase();
+          // TODO build object from scratch so that you can use , in the values
+            self.variables.push(variableObj);
+            $('<option value="'+ variableObj.name +'">' +
+           variableObj.label +
+          '</option>').appendTo(self.controls.editor_variable_select_input);
+          }
+        }
+      }
+      for(var i = 0; i < self.themeGraph.parsed.length; i++) {
+        if(self.themeGraph.parsed[i].path === opts.paths.variables) {
+          self.controls.editor_widget_cache_loader.empty();
+          $('<div>'+self.getLabel('LBL_BUILDING_VARIABLES')+'</div>').appendTo(self.controls.editor_widget_cache_loader);
+          searchVariables(self.themeGraph.parsed[i]);
+          self.controls.editor_widget_cache_loader.empty();
+          self.controls.editor_widget.removeClass('hidden');
+          self.controls.editor_widget.removeAttr('hidden');
+        }
+      }
+    };
+
+    /**
      * Builds a JSON structure
      * then stores it in sessionStorage
      * then initialises editor
@@ -544,6 +598,7 @@
       } else {
         self.loadThemeGraph();
       }
+      self.buildVariableGraph();
       console.log('sassBootstrapThemeEditor - config ', opts);
     };
 
@@ -568,7 +623,7 @@
       "sass_path": "bower_components/bootstrap/scss/",
       "index": "bootstrap",
       // include in every compile
-      "variables": "_variables",
+      "variables": "variables",
       // Always send the following files to the compiler
       "always-include": [
         "_variables",
@@ -597,6 +652,6 @@
       "file_extension": '.scss'
     },
     "debug": false,
-    "reloadSessionStorage": true
+    "reloadSessionStorage": false
   }
 }(jQuery));
